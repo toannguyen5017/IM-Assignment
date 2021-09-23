@@ -11,6 +11,8 @@ TableRow row;
 ArrayList <Person> persons = new ArrayList <Person>();
 Table peopleCount;
 
+int test;
+
 void setup() {
   size(1000, 1000);
   ellipseMode(CENTER);
