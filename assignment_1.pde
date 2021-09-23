@@ -40,7 +40,7 @@ void draw() {
       persons.remove(i);
     }
   }
-  if (index == 365) {
+  if (index / 2 == 365) {
     println("done!");
   }
 }
@@ -58,7 +58,7 @@ void updateArray() { // checks if all persons in the array are gone. need to and
       lastDate = split(row.getString(0), '/');
       startX = -50; //startX has to be updated as else it continues to get further and further back.
       count = count /10; 
-      println(index, " ", count);
+      println(index / 48, " ", count);
       for (int i = 0; i < count; i++) { //creates new persons according to the new count.
         persons.add(new Person(startX, startY, speed, personSize)); 
         startX = startX - 50;
