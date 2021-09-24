@@ -9,8 +9,9 @@ void updateArray() { // checks if all persons in the array are gone. need to and
       rowIn = peopleCountIn.getRow(index);
       rowOut = peopleCountOut.getRow(index);
     } else {  
+      //println(rowIn.getString(0), " ", count); //debugging to see if the count is working
       lastDate = split(rowIn.getString(0), '/');
-      startX1 = -50; //startX has to be updated as else it continues to get further and further back.
+      //startX1 = -50; //startX has to be updated as else it continues to get further and further back.
       startX2 = width/2;
       inCount = inCount /10; 
       outCount = outCount /10;
@@ -19,13 +20,15 @@ void updateArray() { // checks if all persons in the array are gone. need to and
         persons.add(new Person(startX1, startY, speed, personSize)); 
         startX1 = startX1 - 50;
       }
-      /* for (int i = 0; i < outCount; i++) { //does the same but for people leaving
-        persons.add(new Person(startX2, startY, speed, personSize));
+
+      for (int i = 0; i < outCount; i++) { //does the same but for people leaving
+          //persons.add(new Person(startX2, startY, speed, personSize)); 
+          startX2 = startX2 - 50;
+        }
         
-      } */
+      }
+      index++;
+      rowIn = peopleCountIn.getRow(index);
+      rowOut = peopleCountOut.getRow(index);
     }
   }
-  index++;
-  rowIn = peopleCountIn.getRow(index);
-  rowOut = peopleCountOut.getRow(index);
-}

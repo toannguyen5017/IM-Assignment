@@ -33,13 +33,18 @@ void draw() {
   background(255); 
 
   fill(1);
-  circle(width/2, height/2, 100);
+  
   updateArray();
 
   for (Person person : persons) {
-      person.personMove(); 
-      person.display();
+    person.personMove(); 
+    person.display();
   }
+  fill(255);
+  //rect(width/4, height/2, width/2, 200);
+  fill(0);
+  circle(width/2, height/2, 100);
+
 
   for (int i = 0; i < persons.size(); i++) { //goes through each person and checks if they are passed 500, if so removes it. seperate from other for loop as it need i to find the position in the array
     Person checkPerson = persons.get(i);
