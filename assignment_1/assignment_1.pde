@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 int count; //increase or decrease the amoount of people
 int index = 0; //starts the count at the first row 
 float personSize = 30; //changes the size
@@ -12,30 +13,83 @@ ArrayList <Person> persons = new ArrayList <Person>();
 Table peopleCount;
 
 int test;
+=======
+
+Table peopleCountIn;
+Table peopleCountOut;
+Table temperature;
+
+int index = 0; //starts the count at the first rowIn 
+TableRow rowIn;
+TableRow rowOut;
+TableRow tempRow;
+String[] lastDate;
+
+ArrayList <Person> persons = new ArrayList <Person>();
+int startX1 = -30;
+int startX2; //startX2 and startY have to be delacred in setUp as the height and width isn't set till the program starts because of fullscreen();
+int startY; 
+float personSize = 30; //changes the size
+int speed = 10; //
+
+int inCount; //increase or decrease the amoount of people
+int outCount;
+
+float lastTemp;
+color fColour; //starting Colour
+>>>>>>> Stashed changes
 
 void setup() {
   size(1000, 1000);
   ellipseMode(CENTER);
+<<<<<<< Updated upstream
   rectMode(CENTER);
 
   peopleCount = loadTable("peopleCount.csv"); //produces the table
   row = peopleCount.getRow(index); 
   String[] splitlast = split(row.getString(0), ' ');
   lastDate = split(splitlast[1], ':');
+=======
+  colorMode(RGB, 100, 100, 100);
+  
+
+  peopleCountIn = loadTable("peopleCountIn.csv"); //produces the table of people entering.
+  peopleCountOut = loadTable("peopleCountOut.csv"); //produces table of people leaving.
+  temperature = loadTable("airTemperature.csv"); //produces the table for air temperature
+
+  rowIn = peopleCountIn.getRow(index); //sets up the starting dates for update array
+  rowOut = peopleCountIn.getRow(index); 
+  String[] splitlast = split(rowIn.getString(0), ' '); //splits the string first into date and then time
+  lastDate = split(splitlast[1], ':'); //splits the string into hours and minutes 
+  
+  tempRow = temperature.getRow(index);
+
+  startY = height / 2;
+  startX2 = width / 2;
+>>>>>>> Stashed changes
 }
 
 void draw() {
   noStroke();
-  background(255); 
+  backgroundColour(); 
 
+<<<<<<< Updated upstream
   fill(1);
   circle(500, 500, 100);
+=======
+>>>>>>> Stashed changes
   updateArray();
 
-  for (Person person : persons) {
+  for (Person person : persons) { //for each person object in the persons arraylist it runs personMove and display
     person.personMove(); 
     person.display();
   }
+<<<<<<< Updated upstream
+=======
+  fill(0);
+  circle(width/2, height/2, 100);
+
+>>>>>>> Stashed changes
 
   for (int i = 0; i < persons.size(); i++) { //goes through each person and checks if they are passed 500, if so removes it. seperate from other for loop as it need i to find the position in the array
     Person checkPerson = persons.get(i);
