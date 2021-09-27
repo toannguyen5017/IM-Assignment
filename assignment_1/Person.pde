@@ -18,7 +18,7 @@ class Person {
     x = x + s;
   }
   void display() { //draws the circle
-    fill(1);
+    fill(255);
     circle(x, y, si);
   }
 

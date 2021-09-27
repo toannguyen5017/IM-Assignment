@@ -24,10 +24,11 @@ void updateArray() { // checks if all persons in the array are gone. need to and
       }
 
       /* for (int i = 0; i < outCount; i++) { //does the same but for people leaving
-        persons.add(new Person(startX2, startY, speed, personSize)); 
-        //startX2 = startX2 - 50;
-      } */
+       persons.add(new Person(startX2, startY, speed, personSize)); 
+       //startX2 = startX2 - 50;
+       } */
     }
+
     index++;
     rowIn = peopleCountIn.getRow(index);
     rowOut = peopleCountOut.getRow(index);
