@@ -5,7 +5,7 @@ float diff;
     float temp =  tempRow.getFloat(1);
     if (temp < lastTemp) {
       diff = lastTemp - temp; 
-      BColor(
+      //BColor();
     }
   }
   //float temp = getFloat(1)  
