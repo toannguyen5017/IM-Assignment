@@ -17,9 +17,8 @@ void backgroundColour() {
     R = PR - diff;
   }
   bColour = color(map(R, -2000, 2000 ,0,255), 0, map(B, -2000, 2000, 0, 255));
-  //bolour = color(R,0,B);
   background(bColour);
-  println(R, " ", B, diff);
+  println(R, " ", B);
   PR = R;
   PB = B;
   tempIndex++;
