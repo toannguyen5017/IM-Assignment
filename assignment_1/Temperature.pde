@@ -1,6 +1,6 @@
 float diff;
-
 void backgroundColour() { 
+  //gets the temp
   tempRow = temperature.getRow(tempIndex);
   float temp = tempRow.getFloat(1);
   
@@ -8,7 +8,7 @@ void backgroundColour() {
     R = temp; 
     B = temp;
   } else if (temp > lastTemp) {
-    diff = temp - lastTemp; 
+    diff = temp - lastTemp;  
     R = PR + diff;
     B = PB - diff;
   } else if (temp < lastTemp) {

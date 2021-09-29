@@ -22,7 +22,7 @@ class Person {
     circle(x, y, si);
   }
 
-  boolean finished() {
+  boolean finished() { //check if the dot is halfway
     if (x == width/2 || x == width) {
       return true;
     }
