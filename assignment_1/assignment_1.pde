@@ -1,20 +1,27 @@
+import controlP5.*;
+import beads.*;
+
 int count; //increase or decrease the amoount of people
 int index = 0; //starts the count at the first row 
 float personSize = 30; //changes the size
 int startX = -30;
-int startY = 500; //have to be hard coded as size isn't set till after this is declared
-int speed = 10; //not nearly fast enough
+int startY; //have to be hard coded as size isn't set till after this is declared
+int speed = 15; //
 String[] lastDate;
-String[] hour;
-int[] countArray = new int[23];
 TableRow row;
 ArrayList <Person> persons = new ArrayList <Person>();
 Table peopleCount;
 
-int test;
+// global values for ambient sound
+AudioContext ac;
+Gain g;
+
+// global values for mute button
+ControlP5 cp5;
+boolean muteToggle = false;
 
 void setup() {
-  size(1000, 1000);
+  fullScreen();
   ellipseMode(CENTER);
   rectMode(CENTER);
 
@@ -22,6 +29,26 @@ void setup() {
   row = peopleCount.getRow(index); 
   String[] splitlast = split(row.getString(0), ' ');
   lastDate = split(splitlast[1], ':');
+  startY = height / 2;
+  
+  // setup for ambient sound
+  ac = AudioContext.getDefaultContext();
+  sound();
+  
+  // setup for mute button
+  cp5 = new ControlP5(this);
+  
+  cp5.addToggle("muteToggle")
+    .setPosition(50, 50)
+    .setSize(80, 50)
+    .setValue(false)
+    .setColorBackground(color(#2904C4))
+    .setColorForeground(color(#3BB0FC))
+    .setColorActive(color(#FC3B3B))
+    .setCaptionLabel("Mute")
+    .setColorCaptionLabel(0)
+    
+  ;
 }
 
 void draw() {
@@ -29,8 +56,16 @@ void draw() {
   background(255); 
 
   fill(1);
-  circle(500, 500, 100);
+  circle(width/2, height/2, 100);
   updateArray();
+  
+  // set gain based off of number of people, or 0 if mute button is activated
+  if(muteToggle == true){
+    g.setGain(0);
+  }
+  else {
+  g  .setGain(persons.size()/10);
+  }
 
   for (Person person : persons) {
     person.personMove(); 
@@ -42,6 +77,9 @@ void draw() {
     if (checkPerson.finished()) {
       persons.remove(i);
     }
+  }
+  if (index / 2 == 365) {
+    println("done!");
   }
 }
 
@@ -57,47 +95,14 @@ void updateArray() { // checks if all persons in the array are gone. need to and
       //println(row.getString(0), " ", count); //debugging to see if the count is working
       lastDate = split(row.getString(0), '/');
       startX = -50; //startX has to be updated as else it continues to get further and further back.
+      count = count /10; 
+      println(index / 48, " ", count);
       for (int i = 0; i < count; i++) { //creates new persons according to the new count.
         persons.add(new Person(startX, startY, speed, personSize)); 
         startX = startX - 50;
       }
-      count = row.getInt(1);
       index++;
       row = peopleCount.getRow(index);
-    }
-  }
-}
-
-
-class Person {
-  float y;
-  float x;
-  float s; 
-  float si;
-
-  Person(float xpos, float ypos, float speed, float size) {
-    x = xpos;
-    y = ypos;
-    s = speed;
-    si = size;
-  }
-
-  void personMove() { //updates the x value each frame according to the speed value (s)
-    pushMatrix(); 
-    translate(x, y);
-    popMatrix(); 
-    x = x + s;
-  }
-  void display() { //draws the circle
-    fill(1);
-    circle(x, y, si);
-  }
-
-  boolean finished() { //checks if x is greater than 500; 
-    if (x >= 500) {
-      return true;
-    } else {
-      return false;
     }
   }
 }
