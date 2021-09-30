@@ -40,5 +40,5 @@ void drawYLabels() {
     line(X1, y, X1-5, y);
   }
   textSize(18);
-  text("units", X1-40, height/2 + 300);
+  text("°C", X1-40, height/2 + 300);
 } // drawYLabels()

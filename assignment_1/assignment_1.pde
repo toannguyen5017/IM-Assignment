@@ -1,15 +1,12 @@
 //Tab;es
 Table peopleCountIn;
-Table peopleCountOut;
 Table temperature;
 
 //people count parameters
 int index = 0; //starts the count at the first rowIn 
 TableRow rowIn;
-TableRow rowOut;
 String[] lastDate;
 int inCount; //increase or decrease the amoount of people
-int outCount;
 
 //person parameters
 ArrayList <Person> persons = new ArrayList <Person>();
@@ -17,7 +14,7 @@ int startX1 = -30;
 int startX2; //startX2 and startY have to be delacred in setUp as the height and width isn't set till the program starts because of fullscreen();
 int startY; 
 float personSize = 30; //changes the size
-int speed = 10; //
+int speed = 15; //
 
 
 //background colour parameters
@@ -35,19 +32,17 @@ int[] mm;
 float X1, Y1, X2, Y2;
 
 void setup() {
-  fullScreen();
+  fullScreen(1);
   ellipseMode(CENTER);
   colorMode(RGB, 255, 100, 255); //needs to be in RGB for background to change between red and blue
 
   //loading tables
   peopleCountIn = loadTable("peopleCountIn.csv");
-  peopleCountOut = loadTable("peopleCountOut.csv");
   temperature = loadTable("airTemperature.csv");
   String[] lines = loadStrings("airTemperature.csv");
 
   //getting last date for people counter and temp
   rowIn = peopleCountIn.getRow(index); //sets up the starting dates for update array
-  rowOut = peopleCountIn.getRow(index); 
   
   String[] splitlast = split(rowIn.getString(0), ' '); //splits the string first into date and then time
   lastDate = split(splitlast[1], ':'); //splits the string into hours and minutes 
@@ -57,9 +52,9 @@ void setup() {
 
   //sets up the graph adjust these values to change it's position just be careful as it may flip the graph upside down.
   X1 = width/2 - 300; 
-  Y1 = height/2 + 200;
+  Y1 = height/2 + 300;
   X2 = width/2 + 300; 
-  Y2 = height/2 + 400;
+  Y2 = height/2 + 500;
   
   amount = new float[lines.length];
   mm = new int[lines.length];
@@ -85,7 +80,6 @@ void draw() {
 
   //functions that need calling
   backgroundColour();
-  updateArray();
   noFill();
   drawGraph(amount, minamount, maxamount);
   drawXLabels();
@@ -93,8 +87,23 @@ void draw() {
 
 
   //drawing the center circle
+   fill(255);
+  circle(width/2, height/2, 200);
+  fill(bColour);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  text(persons.size() * 10 + " people", width/2,height/2);
+  
+  //draws a circle with the current temperature;
   fill(255);
-  circle(width/2, height/2, 100);
+  circle(width/2, height/2 + 200, 150);
+  fill(bColour);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  String printTemp = nf(temp, 0, 2);
+  text(printTemp +"°C", width/2,height/2 + 200);
+  
+  updateArray();
 
   //for each person object in the persons arraylist it runs personMove and display
   for (Person person : persons) { 

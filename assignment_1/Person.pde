@@ -23,7 +23,7 @@ class Person {
   }
 
   boolean finished() { //check if the dot is halfway
-    if (x == width/2 || x == width) {
+    if (x >= width/2 - 100) {
       return true;
     }
     return false;
