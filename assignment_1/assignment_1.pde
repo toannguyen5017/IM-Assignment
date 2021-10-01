@@ -59,16 +59,9 @@ void setup() {
  
 
   //sets up the graph adjust these values to change it's position just be careful as it may flip the graph upside down.
-  X1 = width/2 - 300; 
-  Y1 = height/2 + 300;
-  X2 = width/2 + 300; 
-  Y2 = height/2 + 500;
-  
-  amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
-  mm = new int[167];
-  
-  //splits up the string
-  splitString();
+
+  //set up Graphs
+  setUpGraph();
 
 tempRow = temperature.getRow(0);
   //initalisng values dependant on the screen size

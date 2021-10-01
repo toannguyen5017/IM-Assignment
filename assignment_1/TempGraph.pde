@@ -1,4 +1,13 @@
-void splitString() { 
+void setUpGraph() { 
+  X1 = width/2 + 100; 
+  Y1 = height/2 + 300;
+  X2 = width/2 + 800; 
+  Y2 = height/2 + 450;
+
+  amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
+  mm = new int[167];
+
+
   for (int i=0; i<temperature.getRowCount(); i++) {
     tempSplit = split(tempRow.getString(0), '-');
     String[] tempDate = split(tempSplit[2], ' ');
@@ -51,7 +60,7 @@ void drawXLabels() {
   }
   textSize(18);
   textAlign(CENTER, TOP);
-  text("Time", width/2, Y2+40);
+  text("months", width/2 + 450, Y2+40);
 }
 
 void drawYLabels() {
@@ -65,5 +74,5 @@ void drawYLabels() {
     line(X1, y, X1 -5, y);
   }
   textSize(18);
-  text("units", X1-50, height/2 + 300);
+  text("°C", X1-50, height/2 + 375);
 } // drawYLabels()
