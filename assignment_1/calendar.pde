@@ -7,10 +7,10 @@ import java.text.SimpleDateFormat;
 class CalendarTimelapse {
   Calendar calendar = (Calendar) Calendar.getInstance();
   Calendar calendarForBrowsing = (Calendar) Calendar.getInstance();
-  
+
   Calendar calMinLimit = (Calendar) Calendar.getInstance();
   Calendar calMaxLimit = (Calendar) Calendar.getInstance();
-  
+
   SimpleDateFormat sdf;
   int monthIndex;
   boolean isDateText = true;
@@ -19,16 +19,20 @@ class CalendarTimelapse {
   float translateX = 2.75;
   float translateY = 10;
 
+  int timelapseModulo = 250;
+  int timelapseIncrement = 1;
+
+
   Button nextButton = new Button("NEXT", this, 235, -50);
   Button prevButton = new Button("PREV", this, 5, -50);
   Button closeButton = new Button("CLOSE", this, 235, 235);
 
 
   CalendarTimelapse() {
-    calendar.set(2019, 6, 13, 0, 0);
+    calendar.set(2019, 6, 31, 0, 0);
     calendarForBrowsing.set(2019, 6, 13, 0, 0);
     calMinLimit.set(2019, 7, 12);
-    calMaxLimit.set(2019, 10, 31);
+    calMaxLimit.set(2019, 11, 30, 0, 0);
 
     sdf = new SimpleDateFormat("d/M/y");
 
@@ -36,6 +40,26 @@ class CalendarTimelapse {
     System.out.println(calendar.get(Calendar.MONTH));
 
     monthIndex = calendarForBrowsing.get(Calendar.MONTH);
+  }
+
+  void timelapse() {
+    if ((timelapseIncrement % timelapseModulo) == 0) {
+      if (calendar.before(calMaxLimit)) {
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        System.out.println(timelapseIncrement);
+        timelapseIncrement = 1;
+      }
+    } else {
+      timelapseIncrement++;
+    }
+  }
+
+  Boolean getIsBrowse() {
+    return isBrowse;
+  }
+
+  Calendar getCalendar() {
+    return calendar;
   }
 
   Button getButton(String type) {
@@ -124,7 +148,8 @@ class CalendarTimelapse {
     drawDays(); 
     fill(0);
     textSize(15);
-    text(getTextOfMonth(calendarForBrowsing.get(Calendar.MONTH)), 0 + 80, 0 - 50);
+    if(isBrowse) text(getTextOfMonth(calendarForBrowsing.get(Calendar.MONTH)), 0 + 80, 0 - 50);
+    else text(getTextOfMonth(calendar.get(Calendar.MONTH)), 0 + 80, 0 - 50);
   }
 
   int track = 1;
@@ -141,9 +166,12 @@ class CalendarTimelapse {
     int x = 0;
     int y = 0;
 
+    Calendar firstDayOfMonthCal = Calendar.getInstance();
     Calendar calendarTemp;
     if (isBrowse) calendarTemp = calendarForBrowsing;
     else calendarTemp = calendar;
+
+    firstDayOfMonthCal.set(2019, calendarTemp.get(Calendar.MONTH), 1);
 
     for (int i = 0; i < 6; ++i) {
       for (int j = 1; j <= 7; ++j, ++track) {
@@ -151,9 +179,9 @@ class CalendarTimelapse {
         stroke(0);
         fill(0);
 
-        if (getDayOfWeek(calendarTemp.get(Calendar.DAY_OF_WEEK)) <= track) {
+        if (getDayOfWeek(firstDayOfMonthCal.get(Calendar.DAY_OF_WEEK)) <= track ) {
           if (dayIndex <= numberOfDays) {
-            text(dayIndex, x - widthHeight/6, y + widthHeight/6);
+            new Day(dayIndex, x, y, widthHeight, this);
             ++dayIndex;
           }
         }
@@ -180,6 +208,8 @@ class CalendarTimelapse {
 
 
   void drawCalendar() {
+    timelapse();
+
     pushMatrix();
     translate(width/translateX, height/translateY);
     if (isDateText) drawDate(); 
@@ -208,16 +238,17 @@ class CalendarTimelapse {
   }
 
   void viewNextMonth() {
+    isBrowse = true;
     if (calendarForBrowsing.before(calMaxLimit)) {
       calendarForBrowsing.add(Calendar.MONTH, 1);
     }
-    isBrowse = true;
+    if (calendarForBrowsing.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) isBrowse = false;
   }
 
   void viewPreviousMonth() {
     isBrowse = true;
-    if(calendarForBrowsing.after(calMinLimit))
-    calendarForBrowsing.add(Calendar.MONTH, -1);
+    if (calendarForBrowsing.after(calMinLimit))
+      calendarForBrowsing.add(Calendar.MONTH, -1);
     if (calendarForBrowsing.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) isBrowse = false;
   }
 }
