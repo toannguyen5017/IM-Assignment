@@ -38,9 +38,7 @@ class Button {
     System.out.println("worked");
     if (this.type == "NEXT") parent.viewNextMonth();
     if (this.type == "PREV") parent.viewPreviousMonth();
-    if (this.type == "CLOSE") {
-      parent.toggleDate();
-    }
+    if (this.type == "CLOSE") parent.toggleDate();
   }
 
   void drawButton() {
