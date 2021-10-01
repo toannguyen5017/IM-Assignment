@@ -1,4 +1,4 @@
-//Tab;es
+//Tables
 Table peopleCountIn;
 Table temperature;
 
@@ -29,7 +29,12 @@ color pColour;
 float[] amount;
 float minamount, maxamount;
 int[] mm;
-float X1, Y1, X2, Y2;
+int tempCount;
+int graphIndex = 0;
+float X1, Y1, X2, Y2, sum;
+int y = 0;
+String[] tempSplit;
+String[] lastTempDate;
 
 void setup() {
   fullScreen(1);
@@ -38,8 +43,7 @@ void setup() {
 
   //loading tables
   peopleCountIn = loadTable("peopleCountIn.csv");
-  temperature = loadTable("airTemperature.csv");
-  String[] lines = loadStrings("airTemperature.csv");
+  temperature = loadTable("airTemp.csv");
 
   //getting last date for people counter and temp
   rowIn = peopleCountIn.getRow(index); //sets up the starting dates for update array
@@ -47,8 +51,12 @@ void setup() {
   String[] splitlast = split(rowIn.getString(0), ' '); //splits the string first into date and then time
   lastDate = split(splitlast[1], ':'); //splits the string into hours and minutes 
   
-  tempRow = temperature.getRow(tempIndex);
-  lastTemp = tempRow.getFloat(1);
+  tempRow = temperature.getRow(graphIndex);
+  lastTemp = tempRow.getFloat(0);
+  tempSplit = split(tempRow.getString(0), '-'); 
+  lastTempDate = split(tempSplit[2], ' '); 
+ 
+ 
 
   //sets up the graph adjust these values to change it's position just be careful as it may flip the graph upside down.
   X1 = width/2 - 300; 
@@ -56,20 +64,13 @@ void setup() {
   X2 = width/2 + 300; 
   Y2 = height/2 + 500;
   
-  amount = new float[lines.length];
-  mm = new int[lines.length];
+  amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
+  mm = new int[167];
   
   //splits up the string
-  for (int i=0; i<lines.length; i++) {
-    String[] pieces = split(lines[i], ",");
-    amount[i] = float(pieces[1]);
-    mm[i] = int(pieces[0]);
-  }
+  splitString();
 
-  minamount = min(amount);
-  maxamount = max(amount);
-
-
+tempRow = temperature.getRow(0);
   //initalisng values dependant on the screen size
   startY = height / 2;
   startX2 = width / 2;
@@ -84,7 +85,6 @@ void draw() {
   drawGraph(amount, minamount, maxamount);
   drawXLabels();
   drawYLabels();
-
 
   //drawing the center circle
    fill(255);

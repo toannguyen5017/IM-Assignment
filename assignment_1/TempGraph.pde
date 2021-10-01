@@ -1,3 +1,30 @@
+void splitString() { 
+  for (int i=0; i<temperature.getRowCount(); i++) {
+    tempSplit = split(tempRow.getString(0), '-');
+    String[] tempDate = split(tempSplit[2], ' ');
+    if (int(tempDate[0]) == int(lastTempDate[0])) {
+      sum = sum + tempRow.getFloat(1);
+      tempCount++;
+    } else {
+      float avg = sum/ tempCount;
+      //println("date: ",tempSplit[0],"/",tempSplit[1],"/",tempSplit[2],"/", " sum: ", sum, " count: ", tempCount, " avg: ", avg);
+      if (avg > 0) { //had 4 0.0 avgs at the end for some reason this is to filter them out
+        amount[y] = avg;
+        mm[y] = int(avg);
+        y++;
+        sum = 0;
+        tempCount = 0;
+        lastTempDate[0] = tempDate[0];
+      }
+    }
+    graphIndex++; 
+    tempRow = temperature.getRow(graphIndex);
+  }
+
+  minamount = min(amount);
+  maxamount = max(amount);
+}
+
 void drawGraph(float[] data, float yMin, float yMax) {
   stroke(255);
   strokeWeight(1);
@@ -15,18 +42,16 @@ void drawXLabels() {
   textSize(10);
   textAlign(CENTER);
 
-  int m = 0;
-  for (int i=0; i<mm.length; i++) {
-    if (mm[i] == m) continue;
-    m = mm[i];
-    float x = map(i, 0, mm.length, X1, X2);
-    text(m, x, Y2+10);
+  String[] months = {"July", "August", "September", "October", "December", "January"};
+  for (int i=0; i< months.length; i++) {
+    float x = map(i, 0, months.length - 1, X1, X2);
+    text(months[i], x, Y2+30);
     strokeWeight(0.3);
     line(x, Y2, x, Y1);
   }
   textSize(18);
   textAlign(CENTER, TOP);
-  text("Time", width/2, Y2+10);
+  text("Time", width/2, Y2+40);
 }
 
 void drawYLabels() {
@@ -34,11 +59,11 @@ void drawYLabels() {
   textSize(10);
   textAlign(RIGHT);
   stroke(255);
-  for (float i=minamount; i <= maxamount; i += 10) {
+  for (float i = minamount; i <= maxamount; i++ ) {
     float y = map(i, minamount, maxamount, Y2, Y1);
     text(floor(i), X1-10, y);
-    line(X1, y, X1-5, y);
+    line(X1, y, X1 -5, y);
   }
   textSize(18);
-  text("°C", X1-40, height/2 + 300);
+  text("units", X1-50, height/2 + 300);
 } // drawYLabels()

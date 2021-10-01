@@ -14,7 +14,7 @@ void updateArray() { // checks if all persons in the array are gone. need to and
       startX1 = -50; //startX has to be updated as else it continues to get further and further back.
       startX2 = width/2;
       inCount = inCount /10; //divides the count by 10 so each dot represents 10 people
-      println(index / 48, " ", inCount); //debugging to show where we are in the table and current count size
+      //println(index / 48, " ", inCount); //debugging to show where we are in the table and current count size
       for (int i = 0; i < inCount; i++) { //creates new persons according to the new count.
         persons.add(new Person(startX1, startY, speed, personSize)); 
         startX1 = startX1 - 50;
