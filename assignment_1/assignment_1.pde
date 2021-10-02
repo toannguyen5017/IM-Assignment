@@ -1,10 +1,15 @@
+Table temperature;
+TableRow tempRow;
+float lastTemp;
+
+
+
 int count; //increase or decrease the amoount of people
 int index = 0; //starts the count at the first row 
 float personSize = 30; //changes the size
 int startX = -30;
 int startY = 500; //have to be hard coded as size isn't set till after this is declared
 int speed = 10; //not nearly fast enough
-String[] lastDate;
 String[] hour;
 int[] countArray = new int[23];
 TableRow row;
@@ -18,6 +23,25 @@ int savedTime;
 int totalTime = 5000;
 
 
+//temperature graph parameters
+float[] amount;
+float minamount, maxamount;
+int tempCount;
+int graphIndex = 0;
+float X1, Y1, X2, Y2, sum;
+int y = 0;
+String[] tempSplit;
+String[] lastTempDate;
+
+//person graph parameters
+int pIndex = 0;
+int Py = 0;
+float[] pAmount;
+float pMinAmount, pMaxAmount;
+float PX1, PY1, PX2, PY2, pSum;
+String[] dateSplit;
+String[] lastDate;
+
 CalendarTimelapse calendar;
 
 
@@ -28,15 +52,35 @@ void setup() {
 
   calendar = new CalendarTimelapse();
 
-  peopleCount = loadTable("./data/peopleCount.csv"); //produces the table
-  row = peopleCount.getRow(index); 
-  String[] splitlast = split(row.getString(0), ' ');
-  lastDate = split(splitlast[1], ':');
-
   //Circle branch 
   imageMode(CENTER);
   icon = loadImage("buildingicon.png");
   savedTime = millis();
+
+  //loading tables
+  peopleCount = loadTable("peopleCount.csv");
+  temperature = loadTable("airTemp.csv");
+
+  //getting last date for people counter and temp
+  row = peopleCount.getRow(index); //sets up the starting dates for update array
+
+  lastDate = split(row.getString(0), '/'); 
+
+  tempRow = temperature.getRow(graphIndex);
+  lastTemp = tempRow.getFloat(0);
+  tempSplit = split(tempRow.getString(0), '-'); 
+  lastTempDate = split(tempSplit[2], ' '); 
+
+
+
+  //sets up the graph adjust these values to change it's position just be careful as it may flip the graph upside down.
+
+  //set up Graphs
+  setUpTempGraph();
+  setUpPersonGraph();
+
+  tempRow = temperature.getRow(0);
+  //initalisng values dependant on the screen size
 }
 
 
@@ -65,7 +109,6 @@ void draw() {
    */
 
   noStroke();
-  background(200);
   Building building = new Building();
   int personCounter = persons.size();
   fill(0);
@@ -92,34 +135,45 @@ void draw() {
   circle (500, 500, 300);
   image(icon, 500, 500, 200, 200);
 
+  noFill();
+  drawTempGraph(amount, minamount, maxamount);
+  drawTempXLabels();
+  drawTempYLabels();
+  noFill();
+  drawPeopleGraph(pAmount, pMinAmount, pMaxAmount);
+  drawPeopleXLabels();
+  drawPeopleYLabels();
+
   rectMode(CORNER);
+  fill(0);
   calendar.drawCalendar();
+  fill(255);
   rectMode(CENTER);
 }
 
-void updateArray() { // checks if all persons in the array are gone. need to and time for when the count is 0 
-  /*if (persons.size() == 0) { //once all gone increases count and startX.
-   String[] splitDate = split(row.getString(0), '/');
-   //println(splitDate[0], " ", lastDate[0]);
-   if (int(splitDate[0]) == int(lastDate[0])) {
-   count = count + row.getInt(1);
-   index++; //increases index to the next row
-   row = peopleCount.getRow(index);
-   } else {  
-   //println(row.getString(0), " ", count); //debugging to see if the count is working
-   lastDate = split(row.getString(0), '/');
-   startX = -50; //startX has to be updated as else it continues to get further and further back.
-   for (int i = 0; i < count; i++) { //creates new persons according to the new count.
-   persons.add(new Person(startX, startY, speed, personSize)); 
-   startX = startX - 50;
-   }
-   count = row.getInt(1);
-   index++;
-   row = peopleCount.getRow(index);
-   }
-   }
-   */
-}
+//void updateArray() { // checks if all persons in the array are gone. need to and time for when the count is 0 
+/*if (persons.size() == 0) { //once all gone increases count and startX.
+ String[] splitDate = split(row.getString(0), '/');
+ //println(splitDate[0], " ", lastDate[0]);
+ if (int(splitDate[0]) == int(lastDate[0])) {
+ count = count + row.getInt(1);
+ index++; //increases index to the next row
+ row = peopleCount.getRow(index);
+ } else {  
+ //println(row.getString(0), " ", count); //debugging to see if the count is working
+ lastDate = split(row.getString(0), '/');
+ startX = -50; //startX has to be updated as else it continues to get further and further back.
+ for (int i = 0; i < count; i++) { //creates new persons according to the new count.
+ persons.add(new Person(startX, startY, speed, personSize)); 
+ startX = startX - 50;
+ }
+ count = row.getInt(1);
+ index++;
+ row = peopleCount.getRow(index);
+ }
+ }
+ */
+//}
 
 void mouseClicked() {
   if (calendar.isDateText == true && mouseX >= calendar.translateX + 55 && mouseX <= calendar.translateX + 230
