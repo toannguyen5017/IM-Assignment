@@ -1,3 +1,14 @@
+import controlP5.*;
+import beads.*;
+
+// global values for ambient sound
+AudioContext ac;
+Gain g;
+
+// global values for mute button
+ControlP5 cp5;
+boolean muteToggle = false;
+
 //int count; //increase or decrease the amoount of people
 Table peopleCountIn;
 Table peopleCountOut;
@@ -94,6 +105,26 @@ void setup() {
 
   tempRow = temperature.getRow(0);
   //initalisng values dependant on the screen size
+
+// setup for ambient sound
+  ac = AudioContext.getDefaultContext();
+  sound();
+  
+  // setup for mute button
+  cp5 = new ControlP5(this);
+  
+  cp5.addToggle("muteToggle")
+    .setPosition(50, 50)
+    .setSize(80, 50)
+    .setValue(false)
+    .setColorBackground(color(#2904C4))
+    .setColorForeground(color(#3BB0FC))
+    .setColorActive(color(#FC3B3B))
+    .setCaptionLabel("Mute")
+    .setColorCaptionLabel(0)
+    
+  ;
+
 }
 
 
@@ -120,6 +151,14 @@ void draw() {
    }
    
    */
+
+   // set gain based off of number of people, or 0 if mute button is activated
+  if(muteToggle == true){
+    g.setGain(0);
+  }
+  else {
+  g  .setGain(persons.size()/10);
+  }
 
   noStroke();
   
