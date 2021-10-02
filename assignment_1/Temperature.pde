@@ -1,8 +1,15 @@
 float temp;
 float diff;
+float tempAv;
+int presentAvTemp;
+int count = 0;
+
 void backgroundColour() { 
 /*  tempRow = temperature.getRow(index);
   float temp = tempRow.getFloat(1);
+  
+  //background 
+  
   if (temp == lastTemp) {
     R = temp; 
     B = temp;
@@ -15,12 +22,38 @@ void backgroundColour() {
     B = PB + diff;
     R = PR - diff;
   }
-  bColour = color(R, 0, B);
-  background(map(R, 0, 40, 0, 255), 0, map(B, 0, 40, 0, 255));
-  //println(R, " ", B);
+
   lastTemp = temp;
-  PR = R;
-  PB = B;
+
   index++;
   */
+  bColour = color(map(R, -2000, 2000 , 60, 255), 50, map(B, -2000, 2000, 120, 255));
+  background(bColour);
+  // println(R, " ", B);
+  
+  PR = R;
+  PB = B;
+  
+  
+  //average
+  
+  tempAv = tempAv + temp;
+  println(temp, " temp");
+  count++;
+  println(count, " count");
+  tempIndex++;
+  
+  if (count == 287) {
+    presentAvTemp = round(tempAv/287);
+    
+    println(tempAv, " tempAv");
+    count = 0;
+    tempAv = 0;
+  }
+  
+  textSize(30);
+  text("Current Temp: " + temp + " °C", width/3, height/3.5);
+  text("Average Temp of the Day: "+ presentAvTemp + " °C" , width/3, height/3);
+  
+  
 }

@@ -1,10 +1,22 @@
+//int count; //increase or decrease the amoount of people
+Table peopleCountIn;
+Table peopleCountOut;
 Table temperature;
+
 TableRow tempRow;
+
+int startX1 = -30;
+int startX2; //startX2 and startY have to be delacred in setUp as the height and width isn't set till the program starts because of fullscreen();
+
+int inCount; //increase or decrease the amoount of people
+int outCount;
+
+int tempIndex = 0;
 float lastTemp;
+float R, B, PR, PB; 
+color bColour;
+color pColour;
 
-
-
-int count; //increase or decrease the amoount of people
 int index = 0; //starts the count at the first row 
 float personSize = 30; //changes the size
 int startX = -30;
@@ -52,6 +64,7 @@ void setup() {
 
   calendar = new CalendarTimelapse();
 
+
   //Circle branch 
   imageMode(CENTER);
   icon = loadImage("buildingicon.png");
@@ -86,7 +99,7 @@ void setup() {
 
 void draw() {
   noStroke();
-  background(255); 
+  background(0, 200, 0); 
 
   /*
   fill(1);
@@ -109,6 +122,11 @@ void draw() {
    */
 
   noStroke();
+  
+  //Amend the color background function
+  // calendar.airTempAverage
+  // calendar.peopleCountAverage
+  
   Building building = new Building();
   int personCounter = persons.size();
   fill(0);
@@ -116,7 +134,7 @@ void draw() {
   textSize(50);
   int passedTime = millis() - savedTime; //time passed
 
-  for (int i=0; i>= calendar.peopleCountAverage; --i) {      
+ /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
     Person person = persons.get(i);
     person.display();
     person.move();
@@ -129,7 +147,7 @@ void draw() {
     if (passedTime > 8000) { //reset timer
       savedTime = millis();
     }
-  }
+  } */
 
   fill(255);
   circle (500, 500, 300);

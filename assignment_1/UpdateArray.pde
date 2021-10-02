@@ -19,7 +19,14 @@
         persons.add(new Person(startX1, startY, speed, personSize)); 
         startX1 = startX1 - 50;
       }
-    }
+
+      /* for (int i = 0; i < outCount; i++) { //does the same but for people leaving
+       persons.add(new Person(startX2, startY, speed, personSize)); 
+       startX2 = startX2 - 50; 
+       }*/
+  //  }
+
+/*
     index++;
     row = peopleCount.getRow(index);
     tempRow = temperature.getRow(index);

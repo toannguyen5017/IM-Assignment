@@ -54,7 +54,7 @@ class CalendarTimelapse {
     monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
 
     updatePeopleCounter();
-    //
+    
     updateAirTemp();
   }
 
