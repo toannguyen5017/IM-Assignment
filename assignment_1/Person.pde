@@ -1,32 +1,78 @@
 class Person {
-  float y;
-  float x;
-  float s; 
-  float si;
 
-  Person(float xpos, float ypos, float speed, float size) {
-    x = xpos;
-    y = ypos;
-    s = speed;
-    si = size;
+  float vx = 0;
+  float vy = 0;
+
+  PVector position;
+
+  float radius, m;
+
+  Person(float x, float y, float r_) {
+    position = new PVector(x, y);
+    radius = r_;
   }
 
-  void personMove() { //updates the x value each frame according to the speed value (s)
-    pushMatrix(); 
-    translate(x, y);
-    popMatrix(); 
-    x = x + s;
-  }
-  void display() { //draws the circle
-    fill(1);
-    circle(x, y, si);
-  }
+  void checkCollision(Building building) { //copied from bouncing balls from processing examples
+    PVector distanceVect = PVector.sub(building.position, position);
+    float distanceVectMag = distanceVect.mag();
 
-  boolean finished() { //checks if x is greater than 500; 
-    if (x >= 500) {
-      return true;
-    } else {
-      return false;
+    float minDistance = radius + 190;
+
+    if (distanceVectMag < minDistance) {
+      float distanceCorrection = (minDistance-distanceVectMag)/2.0;
+      PVector d = distanceVect.copy();
+      PVector correctionVector = d.normalize().mult(distanceCorrection);
+      building.position.add(correctionVector);
+      position.sub(correctionVector);
+
+      float theta  = distanceVect.heading();
+
+      float sine = sin(theta);
+      float cosine = cos(theta);
+
+      PVector[] bTemp = {
+        new PVector(), new PVector()
+      };
+
+      bTemp[1].x  = cosine * distanceVect.x + sine * distanceVect.y;
+      bTemp[1].y  = cosine * distanceVect.y - sine * distanceVect.x;
+
+      PVector[] vFinal = {  
+        new PVector(), new PVector()
+      };
+
+      bTemp[0].x += vFinal[0].x;
+      bTemp[1].x += vFinal[1].x;
+
+      PVector[] bFinal = { 
+        new PVector(), new PVector()
+      };
+
+      bFinal[0].x = cosine * bTemp[0].x - sine * bTemp[0].y;
+      bFinal[0].y = cosine * bTemp[0].y + sine * bTemp[0].x;
+      bFinal[1].x = cosine * bTemp[1].x - sine * bTemp[1].y;
+      bFinal[1].y = cosine * bTemp[1].y + sine * bTemp[1].x;
+
+      building.position.x = position.x + bFinal[1].x;
+      building.position.y = position.y + bFinal[1].y;
+
+      position.add(bFinal[0]);
     }
   }
+
+  void display() {
+    noStroke();
+    fill(100);
+    ellipse(position.x, position.y, radius*2, radius*2);
+  }
+
+  void move() { //move people circles towards center
+    if (abs(500 - position.x) > 0.1) {
+      position.x = position.x + (500 - position.x) * easing;
+    }
+    if (abs(500 - position.y) > 0.1) {
+      position.y = position.y + (500- position.y) * easing;
+    }
+  }
+
 }
