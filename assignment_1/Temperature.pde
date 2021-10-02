@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 
-=======
-float temp;
-float diff;
 void backgroundColour() { 
-  tempRow = temperature.getRow(index);
+  tempRow = temperature.getRow(tempIndex);
   float temp = tempRow.getFloat(1);
   if (temp == lastTemp) {
     R = temp; 
@@ -24,6 +20,5 @@ void backgroundColour() {
   lastTemp = temp;
   PR = R;
   PB = B;
-  index++;
+  tempIndex++;
 }
->>>>>>> PersonGraph

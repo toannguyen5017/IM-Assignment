@@ -3,6 +3,7 @@ void setUpTempGraph() {
   Y1 = height/2 + 300;
   X2 = width/2 + 800; 
   Y2 = height/2 + 450;
+  lineX = X1;
 
   amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
 
@@ -72,4 +73,13 @@ void drawTempYLabels() {
   }
   textSize(18);
   text("°C", X1-50, height/2 + 375);
+}
+
+void drawTempLine() {
+  fill(255, 0, 0);
+  strokeWeight(3);
+  line(lineX, Y1, lineX, Y2);
+  if (persons.size() == 0) {
+    lineX = lineX + 700 / 167;
+  }
 }

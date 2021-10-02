@@ -1,41 +1,6 @@
-<<<<<<< HEAD
-int inCount; //increase or decrease the amoount of people
-int outCount;
-int index = 0; //starts the count at the first rowIn 
-float personSize = 30; //changes the size
-int startX1 = -30;
-int startX2; //startX2 and startY have to be delacred in setUp as the height and width isn't set till the program starts because of fullscreen();
-int startY; 
-int speed = 10; //
-String[] lastDate;
-TableRow rowIn;
-TableRow rowOut;
-ArrayList <Person> persons = new ArrayList <Person>();
-Table peopleCountIn;
-Table peopleCountOut;
-
-void setup() {
-  fullScreen();
-  ellipseMode(CENTER);
-  rectMode(CENTER);
-  startY = height / 2;
-  startX2 = width / 2;
-
-  peopleCountIn = loadTable("peopleCountIn.csv"); //produces the table of people entering.
-  peopleCountOut = loadTable("peopleCountOut.csv"); //produces table of people leaving.
-  rowIn = peopleCountIn.getRow(index);
-  rowOut = peopleCountIn.getRow(index);
-  String[] splitlast = split(rowIn.getString(0), ' ');
-  lastDate = split(splitlast[1], ':');
-=======
 //Tables
 Table peopleCount;
 Table temperature;
-
-//people count parameters
-int index = 0; //starts the count at the first row 
-TableRow row;
-int inCount; //increase or decrease the amoount of people
 
 //person parameters
 ArrayList <Person> persons = new ArrayList <Person>();
@@ -44,7 +9,8 @@ int startX2; //startX2 and startY have to be delacred in setUp as the height and
 int startY; 
 float personSize = 30; //changes the size
 int speed = 15; //
-
+int index = 0;
+int count = 0;
 
 //background colour parameters
 TableRow tempRow;
@@ -53,6 +19,8 @@ float lastTemp;
 float R, B, PR, PB; 
 color bColour;
 color pColour;
+float temp;
+float diff;
 
 //temperature graph parameters
 float[] amount;
@@ -63,8 +31,10 @@ float X1, Y1, X2, Y2, sum;
 int y = 0;
 String[] tempSplit;
 String[] lastTempDate;
+float lineX; 
 
 //person graph parameters
+TableRow row;
 int pIndex = 0;
 int Py = 0;
 float[] pAmount;
@@ -72,6 +42,7 @@ float pMinAmount, pMaxAmount;
 float PX1, PY1, PX2, PY2, pSum;
 String[] dateSplit;
 String[] lastDate;
+float pLineX;
 
 void setup() {
   fullScreen(1);
@@ -104,28 +75,25 @@ void setup() {
   //initalisng values dependant on the screen size
   startY = height / 2;
   startX2 = width / 2;
->>>>>>> PersonGraph
 }
 
 void draw() {
   noStroke();
-
-<<<<<<< HEAD
-  fill(1);
-=======
   //functions that need calling
   backgroundColour();
   noFill();
   drawTempGraph(amount, minamount, maxamount);
   drawTempXLabels();
   drawTempYLabels();
+  drawTempLine();
   noFill();
   drawPeopleGraph(pAmount, pMinAmount, pMaxAmount);
   drawPeopleXLabels();
   drawPeopleYLabels();
+  drawPeopleLine();
 
   //drawing the center circle
-   fill(255);
+  fill(255);
   circle(width/2, height/2, 200);
   fill(bColour);
   textSize(30);
@@ -140,20 +108,14 @@ void draw() {
   textAlign(CENTER, CENTER);
   String printTemp = nf(temp, 0, 2);
   text(printTemp +"°C", width/2,height/2 + 200);
->>>>>>> PersonGraph
   
   updateArray();
-
+  
   //for each person object in the persons arraylist it runs personMove and display
   for (Person person : persons) { 
     person.personMove(); 
     person.display();
   }
-  fill(255);
-  //rect(width/4, height/2, width/2, 200);
-  fill(0);
-  circle(width/2, height/2, 100);
-
 
   //goes through each person and checks if they are passed 500, if so removes it. seperate from other for loop as it need i to find the position in the array
   for (int i = 0; i < persons.size(); i++) { 
@@ -162,10 +124,4 @@ void draw() {
       persons.remove(i);
     }
   }
-<<<<<<< HEAD
-  if (index / 2 == 365) {
-    println("done!");
-  }
-=======
->>>>>>> PersonGraph
 }

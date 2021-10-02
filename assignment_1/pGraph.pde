@@ -3,19 +3,23 @@ void setUpPersonGraph() {
   PY1 = height/2 + 300;
   PX2 = width/2 - 800; 
   PY2 = height/2 + 450;
+  pLineX = PX2;
 
-  pAmount = new float[161]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
-for (int i=0; i<peopleCount.getRowCount(); i++) {
+  pAmount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
+
+  for (int i=0; i<peopleCount.getRowCount(); i++) {
     String[] date = split(row.getString(0), '/');
     //println(tempDate[0], " ", lastDate[0]);
     if (int(date[0]) == int(lastDate[0])) {
       //println(row.getFloat(1));
       pSum = pSum + row.getFloat(1);
     } else {
-      pAmount[Py] = pSum;
-      Py++;
-      pSum = 0;
-      lastDate[0] = date[0];      
+      if (Py < 167) { 
+        pAmount[Py] = pSum;
+        Py++;
+        pSum = 0;
+        lastDate[0] = date[0];
+      }
     }
     pIndex++; 
     row = peopleCount.getRow(pIndex);
@@ -23,13 +27,14 @@ for (int i=0; i<peopleCount.getRowCount(); i++) {
 
   pMinAmount = min(pAmount);
   pMaxAmount = max(pAmount);
+  println(pMinAmount, " ", pMaxAmount);  
 }
 
 void drawPeopleGraph(float[] data, float yMin, float yMax) {
-stroke(255);
+  stroke(255);
   strokeWeight(1);
   beginShape();
- for (int i=0; i < data.length - 4; i++) { //have to minus 4 as or else there is a 0.0 at the end
+  for (int i=0; i < data.length - 4; i++) { //have to minus 4 as or else there is a 0.0 at the end
     float x = map(i, 0, data.length-5, PX1, PX2);
     float y = map(data[i], yMin, yMax, PY2, PY1);
     vertex(x, y);
@@ -38,7 +43,7 @@ stroke(255);
 }
 
 void drawPeopleXLabels() {
- fill(255);
+  fill(255);
   textSize(10);
   textAlign(CENTER);
 
@@ -66,4 +71,13 @@ void drawPeopleYLabels() {
   }
   textSize(18);
   text("People", PX1-740, height/2 + 375);
+}
+
+void drawPeopleLine() {
+  fill(255,0,0);
+  strokeWeight(3);
+  line(pLineX,PY1, pLineX, PY2);
+    if (persons.size() == 0) {
+      pLineX = pLineX + 700 / 167;
+    }
 }
