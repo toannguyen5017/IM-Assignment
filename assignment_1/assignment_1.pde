@@ -44,8 +44,6 @@ void draw() {
   noStroke();
   background(255); 
 
-
-
   /*
   fill(1);
    circle(500, 500, 100);
@@ -75,7 +73,7 @@ void draw() {
   textSize(50);
   int passedTime = millis() - savedTime; //time passed
 
-  for (int i=persons.size()-1; i>=0; i--) {      
+  for (int i=0; i>= calendar.peopleCountAverage; --i) {      
     Person person = persons.get(i);
     person.display();
     person.move();
