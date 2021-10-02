@@ -1,10 +1,18 @@
 import java.util.Calendar; //<>//
 import java.util.Date;
 import java.text.SimpleDateFormat;
-
+import java.util.LinkedList;
 
 
 class CalendarTimelapse {
+  int peopleCountAverage;
+  float airTempAverage;
+
+  Table peopleCounter = loadTable("peopleCountIn.csv");
+  Table airTemp = loadTable("airTemp.csv");
+
+  Table peopleTimelapse = new Table();
+
   Calendar calendar = (Calendar) Calendar.getInstance();
   Calendar calendarForBrowsing = (Calendar) Calendar.getInstance();
 
@@ -12,46 +20,95 @@ class CalendarTimelapse {
   Calendar calMaxLimit = (Calendar) Calendar.getInstance();
 
   SimpleDateFormat sdf;
-  int monthIndex;
+  SimpleDateFormat sdfAirTemp;
+  int monthIndexForBrowsing;
   boolean isDateText = true;
   boolean isBrowse = false;
+  int calendarSize = 280;
 
-  float translateX = 2.75;
-  float translateY = 10;
+  float translateX = width/2 - calendarSize/2;
+  float translateY = 50;
 
   int timelapseModulo = 250;
   int timelapseIncrement = 1;
 
+  LinkedList<Day> dayObjects = new LinkedList<Day>();
 
-  Button nextButton = new Button("NEXT", this, 235, -50);
-  Button prevButton = new Button("PREV", this, 5, -50);
-  Button closeButton = new Button("CLOSE", this, 235, 235);
 
+  Button nextButton = new Button("NEXT", this, calendarSize - calendarSize/7, 0 - calendarSize/7);
+  Button prevButton = new Button("PREV", this, 0, 0 - calendarSize/7);
+  Button closeButton = new Button("CLOSE", this, calendarSize - calendarSize/7, calendarSize - 35);
 
   CalendarTimelapse() {
-    calendar.set(2019, 6, 31, 0, 0);
-    calendarForBrowsing.set(2019, 6, 13, 0, 0);
+    calendar.set(2019, 6, 14, 0, 0);
+    calendarForBrowsing.set(2019, 6, 14, 0, 0);
     calMinLimit.set(2019, 7, 12);
-    calMaxLimit.set(2019, 11, 30, 0, 0);
+    calMaxLimit.set(2019, 11, 31, 0, 0);
 
-    sdf = new SimpleDateFormat("d/M/y");
+    sdf = new SimpleDateFormat("d/MM/y");
+    sdfAirTemp = new SimpleDateFormat("y-MM-d");
 
-    System.out.println(getTextOfDate() + " " + getTextOfDay());
+    System.out.println(getTextOfDate(sdf) + " " + getTextOfDay());
     System.out.println(calendar.get(Calendar.MONTH));
 
-    monthIndex = calendarForBrowsing.get(Calendar.MONTH);
+    monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
+
+    updatePeopleCounter();
+    updateAirTemp();
   }
 
   void timelapse() {
     if ((timelapseIncrement % timelapseModulo) == 0) {
-      if (calendar.before(calMaxLimit)) {
+      if (calendar.get(Calendar.DAY_OF_YEAR) != 365) {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
-        System.out.println(timelapseIncrement);
+        calendarForBrowsing.add(Calendar.DAY_OF_MONTH, 1);
+        updatePeopleCounter();
+        updateAirTemp();
+
         timelapseIncrement = 1;
       }
     } else {
       timelapseIncrement++;
     }
+  }
+
+  void updatePeopleCounter() {
+    int sum = 0;
+    int numberOfRows = 0;
+    int average = 0;
+
+    for (TableRow row : peopleCounter.matchRows(getTextOfDate(sdf) + ".*", 0)) {
+      sum += Integer.parseInt((row.getString(1)));
+      ++numberOfRows;
+    }
+
+    if (sum != 0) average = sum/numberOfRows;
+    peopleCountAverage = average;
+
+    //System.out.println(getTextOfDate(sdf));
+    //System.out.println("People counter average: " + peopleCountAverage);
+
+
+    //System.out.println("People count: " + getTextOfDate(sdf) + " " + sum + " " + numberOfRows + " " + average);
+  }
+
+  void updateAirTemp() {
+    float sum = 0;
+    int numberOfRows = 0;
+    float average = 0;
+
+    for (TableRow row : airTemp.matchRows(getTextOfDate(sdfAirTemp) + ".*", 0)) {
+      sum += Double.parseDouble((row.getString(1)));
+      ++numberOfRows;
+    }
+
+    if (sum != 0) average = sum/numberOfRows;
+    airTempAverage = average;
+
+    //System.out.println(getTextOfDate(sdf));
+    //System.out.println("Air temp average: " + airTempAverage);
+
+    //System.out.println("Air temp: " + getTextOfDate(sdf) + " " + sum + " " + numberOfRows + " " + average);
   }
 
   Boolean getIsBrowse() {
@@ -75,13 +132,13 @@ class CalendarTimelapse {
     }
   }
 
-  String getTextOfDate() {
+  String getTextOfDate(SimpleDateFormat sdf) {
     return sdf.format(calendar.getTime());
   }
 
   void drawDate() {
     textSize(30);
-    text(getTextOfDate(), 0 + 55, 0 + 20);
+    text(getTextOfDate(sdf), 55, 20);
   }
 
   String getTextOfMonth(int monthIndex) {
@@ -146,10 +203,16 @@ class CalendarTimelapse {
 
   void drawMonth() {
     drawDays(); 
+    if (calendar.get(Calendar.MONTH) == calendarForBrowsing.get(Calendar.MONTH)) isBrowse = false;
+    else isBrowse = true;
+    textAlign(CENTER);
     fill(0);
     textSize(15);
-    if(isBrowse) text(getTextOfMonth(calendarForBrowsing.get(Calendar.MONTH)), 0 + 80, 0 - 50);
-    else text(getTextOfMonth(calendar.get(Calendar.MONTH)), 0 + 80, 0 - 50);
+    if (isBrowse) text(getTextOfMonth(calendarForBrowsing.get(Calendar.MONTH)), calendarSize/2, 0 - 30);
+    else {
+      text(getTextOfMonth(calendar.get(Calendar.MONTH)), calendarSize/2, 0 - 30);
+    }
+    textAlign(CORNER);
   }
 
   int track = 1;
@@ -159,10 +222,12 @@ class CalendarTimelapse {
     fill(255);
     stroke(0);
 
+    dayObjects.clear();
+
     int numberOfDays = isBrowse ? calendarForBrowsing.getActualMaximum(Calendar.DAY_OF_MONTH) :  calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     int dayIndex = 1;
 
-    int widthHeight = 40;
+    int widthHeight = calendarSize/7;
     int x = 0;
     int y = 0;
 
@@ -172,6 +237,9 @@ class CalendarTimelapse {
     else calendarTemp = calendar;
 
     firstDayOfMonthCal.set(2019, calendarTemp.get(Calendar.MONTH), 1);
+    if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+      dayObjects.clear();
+    }
 
     for (int i = 0; i < 6; ++i) {
       for (int j = 1; j <= 7; ++j, ++track) {
@@ -181,7 +249,10 @@ class CalendarTimelapse {
 
         if (getDayOfWeek(firstDayOfMonthCal.get(Calendar.DAY_OF_WEEK)) <= track ) {
           if (dayIndex <= numberOfDays) {
-            new Day(dayIndex, x, y, widthHeight, this);
+            if (dayObjects.size() < numberOfDays) dayObjects.push(new Day(dayIndex, monthIndexForBrowsing, x, y, widthHeight, this));
+            for (Day day : dayObjects) {
+              day.drawDay();
+            }
             ++dayIndex;
           }
         }
@@ -193,15 +264,16 @@ class CalendarTimelapse {
     }
     track = 1;
     fill(0);
-    float xDay = x - widthHeight/4;
+    float xDay = x + widthHeight/4;
+    float yDay = -5;
 
-    text("Sun", xDay, -25);
-    text("Mon", xDay + widthHeight, -25);
-    text("Tues", xDay + widthHeight*2, -25);
-    text("Wed", xDay + widthHeight*3, -25);
-    text("Thurs", xDay + widthHeight*4, -25);
-    text("Fri", xDay + widthHeight*5, -25);
-    text("Sat", xDay + widthHeight*6, -25);
+    text("Sun", xDay, yDay);
+    text("Mon", xDay + widthHeight, yDay);
+    text("Tues", xDay + widthHeight*2, yDay);
+    text("Wed", xDay + widthHeight*3, yDay);
+    text("Thurs", xDay + widthHeight*4, yDay);
+    text("Fri", xDay + widthHeight*5, yDay);
+    text("Sat", xDay + widthHeight*6, yDay);
 
     fill(255);
   }
@@ -211,7 +283,7 @@ class CalendarTimelapse {
     timelapse();
 
     pushMatrix();
-    translate(width/translateX, height/translateY);
+    translate(translateX, translateY);
     if (isDateText) drawDate(); 
     else {
       drawMonth();
@@ -230,25 +302,39 @@ class CalendarTimelapse {
 
   float[] detranslateCoordinate(float x, float y) {
     float translatedXY[] =  new float[2];
-    translatedXY[0] = width/translateX  + x - 24;
-    translatedXY[1] = width/translateY + y - 8;
 
+    translatedXY[0] = translateX  + x;
+    translatedXY[1] = translateY + y;
 
     return translatedXY;
   }
 
+  void handleDateChange(int dayIndex, int monthIndex) {
+    calendar.set(2019, monthIndex, dayIndex);
+    calendarForBrowsing.set(2019, monthIndex, dayIndex);
+    
+    isBrowse = false;
+    timelapseIncrement = 1;
+
+    updatePeopleCounter();
+    updateAirTemp();
+  }
+
   void viewNextMonth() {
-    isBrowse = true;
-    if (calendarForBrowsing.before(calMaxLimit)) {
+    dayObjects.clear();
+    if (calendarForBrowsing.get(Calendar.MONTH) + 1 != 12) {
       calendarForBrowsing.add(Calendar.MONTH, 1);
+      monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
     }
-    if (calendarForBrowsing.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) isBrowse = false;
   }
 
   void viewPreviousMonth() {
-    isBrowse = true;
-    if (calendarForBrowsing.after(calMinLimit))
+    dayObjects.clear();
+    if (calendarForBrowsing.after(calMinLimit)) {
+      System.out.println("YES I AM");
       calendarForBrowsing.add(Calendar.MONTH, -1);
-    if (calendarForBrowsing.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) isBrowse = false;
+      monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
+      System.out.println(calendarForBrowsing.getTime());
+    }
   }
 }

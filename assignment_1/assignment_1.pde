@@ -15,13 +15,12 @@ CalendarTimelapse calendar;
 
 
 void setup() {
-  size(1000, 1000);
+  fullScreen(1);
   ellipseMode(CENTER);
   rectMode(CENTER);
- 
+
   calendar = new CalendarTimelapse();
 
- 
   peopleCount = loadTable("./data/peopleCount.csv"); //produces the table
   row = peopleCount.getRow(index); 
   String[] splitlast = split(row.getString(0), ' ');
@@ -32,12 +31,14 @@ void draw() {
   noStroke();
   background(255); 
 
+  rectMode(CORNER);
   calendar.drawCalendar();
-  
+  rectMode(CENTER);
+
   fill(1);
   circle(500, 500, 100);
   updateArray();
-    
+
   for (Person person : persons) {
     person.personMove(); 
     person.display();
@@ -49,6 +50,18 @@ void draw() {
       persons.remove(i);
     }
   }
+
+  //Hover functionality commented out for performance
+  /*for (Day day : calendar.dayObjects) {
+   if (mouseX >= day.getDetranslatedX() && mouseX <= day.getDetranslatedX() + day.getWidth()
+   && mouseY >= day.getDetranslatedY() && mouseY <= day.getDetranslatedY() + day.getHeight()) {
+   day.handleHover();  
+   break;
+   } else { 
+   day.handleUnhover();
+   }
+   }
+   */
 }
 
 void updateArray() { // checks if all persons in the array are gone. need to and time for when the count is 0 
@@ -75,20 +88,33 @@ void updateArray() { // checks if all persons in the array are gone. need to and
 }
 
 void mouseClicked() {
-  if(calendar.isDateText == true) calendar.toggleDate();
+  if (calendar.isDateText == true && mouseX >= calendar.translateX + 55 && mouseX <= calendar.translateX + 230
+  && mouseY <= 70) calendar.toggleDate();
+  
 
-  if(mouseX >= calendar.getButton("CLOSE").getDetranslatedX() && mouseX <= calendar.getButton("CLOSE").getDetranslatedX() + calendar.getButton("CLOSE").getWidth()
-  && mouseY >= calendar.getButton("CLOSE").getDetranslatedY() && mouseY <= calendar.getButton("CLOSE").getDetranslatedY() + calendar.getButton("CLOSE").getHeight()) {
+  if (!calendar.isDateText) {
+    for (Day day : calendar.dayObjects) {
+      if (mouseX >= day.getDetranslatedX() && mouseX <= day.getDetranslatedX() + day.getWidth()
+        && mouseY >= day.getDetranslatedY() && mouseY <= day.getDetranslatedY() + day.getHeight()) {
+        day.handleClick();
+        break;
+      }
+    }
+  }
+
+
+  if (mouseX >= calendar.getButton("CLOSE").getDetranslatedX() && mouseX <= calendar.getButton("CLOSE").getDetranslatedX() + calendar.getButton("CLOSE").getWidth()
+    && mouseY >= calendar.getButton("CLOSE").getDetranslatedY() && mouseY <= calendar.getButton("CLOSE").getDetranslatedY() + calendar.getButton("CLOSE").getHeight()) {
     calendar.getButton("CLOSE").handleButton();
   }
-  
-  if(mouseX >= calendar.getButton("NEXT").getDetranslatedX() && mouseX <= calendar.getButton("NEXT").getDetranslatedX() + calendar.getButton("NEXT").getWidth()
-  && mouseY >= calendar.getButton("NEXT").getDetranslatedY() && mouseY <= calendar.getButton("NEXT").getDetranslatedY() + calendar.getButton("NEXT").getHeight()) {
+
+  if (mouseX >= calendar.getButton("NEXT").getDetranslatedX() && mouseX <= calendar.getButton("NEXT").getDetranslatedX() + calendar.getButton("NEXT").getWidth()
+    && mouseY >= calendar.getButton("NEXT").getDetranslatedY() && mouseY <= calendar.getButton("NEXT").getDetranslatedY() + calendar.getButton("NEXT").getHeight()) {
     calendar.getButton("NEXT").handleButton();
   }
-  
-  if(mouseX >= calendar.getButton("PREV").getDetranslatedX() && mouseX <= calendar.getButton("PREV").getDetranslatedX() + calendar.getButton("PREV").getWidth()
-  && mouseY >= calendar.getButton("PREV").getDetranslatedY() && mouseY <= calendar.getButton("PREV").getDetranslatedY() + calendar.getButton("PREV").getHeight()) {
+
+  if (mouseX >= calendar.getButton("PREV").getDetranslatedX() && mouseX <= calendar.getButton("PREV").getDetranslatedX() + calendar.getButton("PREV").getWidth()
+    && mouseY >= calendar.getButton("PREV").getDetranslatedY() && mouseY <= calendar.getButton("PREV").getDetranslatedY() + calendar.getButton("PREV").getHeight()) {
     calendar.getButton("PREV").handleButton();
   }
   
