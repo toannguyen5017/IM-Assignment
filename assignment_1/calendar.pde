@@ -54,6 +54,7 @@ class CalendarTimelapse {
     monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
 
     updatePeopleCounter();
+    //
     updateAirTemp();
   }
 
@@ -85,8 +86,8 @@ class CalendarTimelapse {
     if (sum != 0) average = sum/numberOfRows;
     peopleCountAverage = average;
 
-    //System.out.println(getTextOfDate(sdf));
-    //System.out.println("People counter average: " + peopleCountAverage);
+    System.out.println(getTextOfDate(sdf));
+    System.out.println("People counter average: " + peopleCountAverage);
 
 
     //System.out.println("People count: " + getTextOfDate(sdf) + " " + sum + " " + numberOfRows + " " + average);
@@ -105,8 +106,8 @@ class CalendarTimelapse {
     if (sum != 0) average = sum/numberOfRows;
     airTempAverage = average;
 
-    //System.out.println(getTextOfDate(sdf));
-    //System.out.println("Air temp average: " + airTempAverage);
+    System.out.println(getTextOfDate(sdf));
+    System.out.println("Air temp average: " + airTempAverage);
 
     //System.out.println("Air temp: " + getTextOfDate(sdf) + " " + sum + " " + numberOfRows + " " + average);
   }
