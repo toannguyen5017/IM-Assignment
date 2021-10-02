@@ -1,4 +1,21 @@
-int count; //increase or decrease the amoount of people
+Table peopleCountIn;
+Table peopleCountOut;
+Table temperature;
+
+TableRow tempRow;
+
+int startX1 = -30;
+int startX2; //startX2 and startY have to be delacred in setUp as the height and width isn't set till the program starts because of fullscreen();
+
+int inCount; //increase or decrease the amoount of people
+int outCount;
+
+int tempIndex = 0;
+float lastTemp;
+float R, B, PR, PB; 
+color bColour;
+color pColour;
+
 int index = 0; //starts the count at the first row 
 float personSize = 30; //changes the size
 int startX = -30;
@@ -28,10 +45,6 @@ void setup() {
 
   calendar = new CalendarTimelapse();
 
-  peopleCount = loadTable("./data/peopleCount.csv"); //produces the table
-  row = peopleCount.getRow(index); 
-  String[] splitlast = split(row.getString(0), ' ');
-  lastDate = split(splitlast[1], ':');
 
   //Circle branch 
   imageMode(CENTER);
@@ -65,7 +78,11 @@ void draw() {
    */
 
   noStroke();
-  background(200);
+  
+  //Amend the color background function
+  // calendar.airTempAverage
+  // calendar.peopleCountAverage
+  
   Building building = new Building();
   int personCounter = persons.size();
   fill(0);
@@ -93,11 +110,13 @@ void draw() {
   image(icon, 500, 500, 200, 200);
 
   rectMode(CORNER);
+  fill(0);
   calendar.drawCalendar();
+  fill(255);
   rectMode(CENTER);
 }
 
-void updateArray() { // checks if all persons in the array are gone. need to and time for when the count is 0 
+//void updateArray() { // checks if all persons in the array are gone. need to and time for when the count is 0 
   /*if (persons.size() == 0) { //once all gone increases count and startX.
    String[] splitDate = split(row.getString(0), '/');
    //println(splitDate[0], " ", lastDate[0]);
@@ -119,7 +138,7 @@ void updateArray() { // checks if all persons in the array are gone. need to and
    }
    }
    */
-}
+//}
 
 void mouseClicked() {
   if (calendar.isDateText == true && mouseX >= calendar.translateX + 55 && mouseX <= calendar.translateX + 230
