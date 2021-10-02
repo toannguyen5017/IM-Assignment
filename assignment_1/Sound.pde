@@ -1,6 +1,6 @@
 void sound() {
   // load sample
-  String audioFileName = "/Users/ToanNguyen/Desktop/IM-Assignment/assignment_1/326016__vincepest11__ambiance-food-market.wav";
+  String audioFileName = sketchPath("") +  "data/326016__vincepest11__ambiance-food-market.wav";
   
   SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
   
