@@ -157,7 +157,7 @@ void draw() {
     g.setGain(0);
   }
   else {
-  g  .setGain(persons.size()/10);
+  g  .setGain(calendar.peopleCountAverage/10);
   }
 
   noStroke();
