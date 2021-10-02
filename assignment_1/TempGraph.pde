@@ -1,12 +1,10 @@
-void setUpGraph() { 
+void setUpTempGraph() { 
   X1 = width/2 + 100; 
   Y1 = height/2 + 300;
   X2 = width/2 + 800; 
   Y2 = height/2 + 450;
 
   amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
-  mm = new int[167];
-
 
   for (int i=0; i<temperature.getRowCount(); i++) {
     tempSplit = split(tempRow.getString(0), '-');
@@ -19,7 +17,6 @@ void setUpGraph() {
       //println("date: ",tempSplit[0],"/",tempSplit[1],"/",tempSplit[2],"/", " sum: ", sum, " count: ", tempCount, " avg: ", avg);
       if (avg > 0) { //had 4 0.0 avgs at the end for some reason this is to filter them out
         amount[y] = avg;
-        mm[y] = int(avg);
         y++;
         sum = 0;
         tempCount = 0;
@@ -34,7 +31,7 @@ void setUpGraph() {
   maxamount = max(amount);
 }
 
-void drawGraph(float[] data, float yMin, float yMax) {
+void drawTempGraph(float[] data, float yMin, float yMax) {
   stroke(255);
   strokeWeight(1);
   beginShape();
@@ -46,7 +43,7 @@ void drawGraph(float[] data, float yMin, float yMax) {
   endShape();
 }
 
-void drawXLabels() {
+void drawTempXLabels() {
   fill(255);
   textSize(10);
   textAlign(CENTER);
@@ -63,7 +60,7 @@ void drawXLabels() {
   text("months", width/2 + 450, Y2+40);
 }
 
-void drawYLabels() {
+void drawTempYLabels() {
   fill(255);
   textSize(10);
   textAlign(RIGHT);
@@ -75,4 +72,4 @@ void drawYLabels() {
   }
   textSize(18);
   text("°C", X1-50, height/2 + 375);
-} // drawYLabels()
+}

@@ -17,7 +17,7 @@ void backgroundColour() {
   }
   bColour = color(R, 0, B);
   background(map(R, 0, 40, 0, 255), 0, map(B, 0, 40, 0, 255));
-  println(R, " ", B);
+  //println(R, " ", B);
   lastTemp = temp;
   PR = R;
   PB = B;
