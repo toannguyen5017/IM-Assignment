@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 
 class CalendarTimelapse {
+  float dayIndexForLine;
+
   boolean isPaused = false;
 
   int peopleCountAverage;
@@ -58,6 +60,8 @@ class CalendarTimelapse {
     updatePeopleCounter();
 
     updateAirTemp();
+
+    dayIndexForLine = calendar.get(Calendar.DAY_OF_YEAR);
   }
 
   void timelapse() {
@@ -67,7 +71,7 @@ class CalendarTimelapse {
         calendarForBrowsing.add(Calendar.DAY_OF_MONTH, 1);
         updatePeopleCounter();
         updateAirTemp();
-
+        dayIndexForLine = calendar.get(Calendar.DAY_OF_YEAR);
         timelapseIncrement = 1;
       }
     } else {
@@ -80,13 +84,12 @@ class CalendarTimelapse {
     if (!isPaused) {
       rect(width - width/16.5, 50, 10, 30);
       rect(width - width/20, 50, 10, 30);
-    }
-    else {
-     beginShape();
-     vertex(width - width/16.5, 50);
-     vertex(width - width/20 + 15, 65);
-     vertex(width - width/16.5, 80);
-     endShape(CLOSE);
+    } else {
+      beginShape();
+      vertex(width - width/16.5, 50);
+      vertex(width - width/20 + 15, 65);
+      vertex(width - width/16.5, 80);
+      endShape(CLOSE);
     }
   }
 
@@ -122,6 +125,8 @@ class CalendarTimelapse {
 
     if (sum != 0) average = sum/numberOfRows;
     airTempAverage = average;
+    dayIndexForLine = calendar.get(Calendar.DAY_OF_YEAR);
+
 
     System.out.println(getTextOfDate(sdf));
     System.out.println("Air temp average: " + airTempAverage);
@@ -300,6 +305,7 @@ class CalendarTimelapse {
 
   void drawCalendar() {
     timelapse();
+    drawLines();
     if (isDateText) drawDate(); 
 
     drawPausePlay();

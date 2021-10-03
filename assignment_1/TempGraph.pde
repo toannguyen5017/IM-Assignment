@@ -3,6 +3,9 @@ float x2;
 float pATA; 
 float y1;
 
+Table accurateAirTemp = new Table();
+
+
 void setUpTempGraph() { 
   X1 = width/2 + width * 1/20; 
   Y1 = height/2 + height * 5/20; 
@@ -12,48 +15,73 @@ void setUpTempGraph() {
   y1 = Y1;
 
 
-  amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
+  Calendar calendarForAirTemp = Calendar.getInstance();
+  calendarForAirTemp.set(2019, 6, 14);
 
-  for (int i=0; i<temperature.getRowCount(); i++) {
-    tempSplit = split(tempRow.getString(0), '-');
-    String[] tempDate = split(tempSplit[2], ' ');
-    if (int(tempDate[0]) == int(lastTempDate[0])) {
-      sum = sum + tempRow.getFloat(1);
-      tempCount++;
-    } else {
-      float avg = sum/ tempCount;
-      //println("date: ",tempSplit[0],"/",tempSplit[1],"/",tempSplit[2],"/", " sum: ", sum, " count: ", tempCount, " avg: ", avg);
-      if (avg > 0) { //had 4 0.0 avgs at the end for some reason this is to filter them out
-        amount[y] = avg;
-        y++;
-        sum = 0;
-        tempCount = 0;
-        lastTempDate[0] = tempDate[0];
-      }
+  SimpleDateFormat sdf = calendar.sdfAirTemp;
+
+  accurateAirTemp = new Table();
+  accurateAirTemp.addColumn("date");
+  accurateAirTemp.addColumn("airTemp");
+
+  float sum = 0;
+  int numberOfRows = 0;
+  float average;
+
+  for (int i = 0; i < 171; ++i) {
+    sum = 0;
+    numberOfRows = 0;
+    average = 0;
+    for (TableRow row : temperature.matchRows(getTextOfDate(sdf, calendarForAirTemp) + ".*", 0)) {
+      sum += Double.parseDouble((row.getString(1)));
+      numberOfRows++;
     }
-    graphIndex++; 
-    tempRow = temperature.getRow(graphIndex);
+    if (sum != 0)average = sum/numberOfRows;
+    TableRow row = accurateAirTemp.addRow();
+    row.setString("date", getTextOfDate(sdf, calendarForAirTemp));
+    row.setFloat("airTemp", average);
+    calendarForAirTemp.add(Calendar.DAY_OF_YEAR, 1);
   }
 
-  minamount = min(amount);
-  maxamount = max(amount);
+  minamount = 100000000;
+  maxamount = 0;
+  for (TableRow row : accurateAirTemp.rows()) {
+    if (row.getInt("airTemp") < minamount ) minamount = row.getFloat("airTemp");
+    if (row.getInt("airTemp") > maxamount) maxamount = row.getFloat("airTemp");
 
-  pATA = calendar.airTempAverage;
+    System.out.println("Date: " + row.getString("date") + " Count: " + row.getFloat("airTemp"));
+    System.out.println(minamount + " " + maxamount);
+  }
 }
 
-void drawTempGraph(float[] data, float yMin, float yMax) {
+void drawTempGraph(float yMin, float yMax) {
   stroke(255);
+
   strokeWeight(1);
+
+
   beginShape();
-  for (int i=0; i < data.length; i++) {
-    float x = map(i, 0, data.length-1, X1, X2);
-    float y = map(data[i], yMin, yMax, Y2, Y1);
+
+  int i = 0;
+
+
+  for (TableRow row : accurateAirTemp.rows()) { //have to minus 4 as or else there is a 0.0 at the end
+    System.out.println("yes");
+
+    float x = map(i++, 0, accurateAirTemp.getRowCount(), X1, X2);
+
+    float y = map(row.getInt("airTemp"), yMin, yMax, Y2, Y1);
+
     vertex(x, y);
   }
   endShape();
+
   fill(255);
+
   textSize(18);
+
   textAlign(LEFT);
+
   text("Average Air Temperature (July - December 2019)", X1, Y1 - 10);
   textSize(10);
   textAlign(RIGHT, BOTTOM);
@@ -62,19 +90,39 @@ void drawTempGraph(float[] data, float yMin, float yMax) {
 
 void drawTempXLabels() {
   fill(255);
+
   textSize(10);
+
   textAlign(CENTER);
 
-  String[] months = {"July", "August", "September", "October", "December", "January"};
+
+  String[] months = {"July", "August", "September", "October", "November", "December"};
+
+  float xJuly = 0;
+  float xAugust = xJuly + 18;
+  float xSept = xAugust + 31;
+  float xOct = xSept + 30;
+  float xNov = xOct + 31;
+  float xDec = xNov + 30;
+
+  float[] xMonths = {xJuly, xAugust, xSept, xOct, xNov, xDec};
+
   for (int i=0; i< months.length; i++) {
-    float x = map(i, 0, months.length - 1, X1, X2);
+
+    float x = map(xMonths[i], 0, 171, X1, X2);
+
     text(months[i], x, Y2+30);
+
     strokeWeight(0.3);
+
     line(x, Y2, x, Y1);
   }
+
   textSize(18);
+
   textAlign(CENTER, TOP);
-  text("months", width/2 + width * 4.5/20, Y2+40);
+
+  text("months", width/2 - width * 4.5/20, Y2 + 40);
 }
 
 void drawTempYLabels() {
@@ -86,19 +134,23 @@ void drawTempYLabels() {
     float y = map(i, minamount, maxamount, Y2, Y1);
     text(floor(i), X1-10, y);
     line(X1, y, X1 -5, y);
+    ++i;
+    ++i;
   }
   textSize(18);
   text("°C", X1-30, height - height * 3.25/20);
 }
 
 void drawLines() {
-  if (calendar.airTempAverage != pATA) {
-    x1 = x1 + (X2 - X1) / 167; 
-    x2 = x2 + (PX2 - PX1) / 167;
-    pATA = calendar.airTempAverage;
-  }
+  float dayIndex = calendar.dayIndexForLine - 195;
+  float xPosPeople = map(dayIndex, 0, 171, PX1, PX2);
+  float xPosAirTemp = map(dayIndex, 0, 171, X1, X2);
+  line(X1, height - 10, X2, height - 10);
+  line(PX1, height -10, PX2, height - 10);
+
+
   strokeWeight(3);
-  line(x1, Y1, x1, Y2);
-  line(x2, PY1, x2, PY2);
+  line(xPosPeople, Y1, xPosPeople, Y2);
+  line(xPosAirTemp, PY1, xPosAirTemp, PY2);
   //text(currentPeopleAverage, x2, PY2+5);
 }

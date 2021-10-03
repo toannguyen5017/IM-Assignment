@@ -86,7 +86,7 @@ void setup() {
 
   //getting last date for people counter and temp
   row = peopleCount.getRow(index); //sets up the starting dates for update array
-
+  System.out.println(row.getString(0) + " yes");
   lastDate = split(row.getString(0), '/'); 
 
   tempRow = temperature.getRow(graphIndex);
@@ -191,15 +191,15 @@ void draw() {
   image(icon, width/2, height/2, 200, 200);
 
   noFill();
-  drawTempGraph(amount, minamount, maxamount);
+  drawTempGraph(minamount, maxamount);
   drawTempXLabels();
   drawTempYLabels();
 
   noFill();
-  drawPeopleGraph(pAmount, pMinAmount, pMaxAmount);
+  drawPeopleGraph(pMinAmount, pMaxAmount);
   drawPeopleXLabels();
   drawPeopleYLabels();
-  drawLines();
+  //drawLines();
   rectMode(CORNER);
   fill(0);
   calendar.drawCalendar();
