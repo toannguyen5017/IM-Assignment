@@ -1,5 +1,5 @@
 class Building { //center circle to bounce off
-  float x = 500, y = 500;
+  float x = width/2, y = height/2;
   float radius = 300;
   float vx = 0, vy = 0;
   PVector position = new PVector(x, y);

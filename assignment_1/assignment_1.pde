@@ -187,8 +187,8 @@ void draw() {
    } */
 
   fill(255);
-  circle (500, 500, 300);
-  image(icon, 500, 500, 200, 200);
+  circle (width/2, height/2, 300);
+  image(icon, width/2, height/2, 200, 200);
 
   noFill();
   drawTempGraph(amount, minamount, maxamount);
