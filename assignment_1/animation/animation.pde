@@ -54,11 +54,10 @@ void draw() {
   image(icon, 500, 500, 200, 200);
 }
 
-/*
+
 void mousePressed() {
   if (mouseX>0 && mouseX<1000 &&
     mouseY>0 && mouseY<1000) {
     persons.add(new Person(mouseX, mouseY, 20));
   }
 }
-*/
