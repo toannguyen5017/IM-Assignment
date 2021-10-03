@@ -51,7 +51,7 @@ void backgroundColour() {
 
   textSize(18);
   textAlign(CORNER);
-  text("Average Number of People Entering in the Day Per 30 minutes: "+ calendar.peopleCountAverage, width/2 - width/2.5, height/2 + height/5);
+  text("Average No. People Entering B11 a Day Per 30 minutes: "+ calendar.peopleCountAverage, width/2 - width/2.5, height/2 + height/5);
   textAlign(CENTER);
   text("Average Temp of the Day: "+ round(calendar.airTempAverage) + "°C", width/2 + width/4.5, height/2 + height/5);
   textAlign(CORNER);
