@@ -1,10 +1,12 @@
-import java.util.Calendar; //<>//
+import java.util.Calendar; //<>// //<>//
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
 
 class CalendarTimelapse {
+  boolean isPaused = false;
+
   int peopleCountAverage;
   float airTempAverage;
 
@@ -54,7 +56,7 @@ class CalendarTimelapse {
     monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
 
     updatePeopleCounter();
-    
+
     updateAirTemp();
   }
 
@@ -69,7 +71,22 @@ class CalendarTimelapse {
         timelapseIncrement = 1;
       }
     } else {
-      timelapseIncrement++;
+      if (!isPaused) timelapseIncrement++;
+    }
+  }
+
+  void drawPausePlay() {
+    fill(0);
+    if (!isPaused) {
+      rect(width - width/16.5, 50, 10, 30);
+      rect(width - width/20, 50, 10, 30);
+    }
+    else {
+     beginShape();
+     vertex(width - width/16.5, 50);
+     vertex(width - width/20 + 15, 65);
+     vertex(width - width/16.5, 80);
+     endShape(CLOSE);
     }
   }
 
@@ -139,7 +156,8 @@ class CalendarTimelapse {
 
   void drawDate() {
     textSize(30);
-    text(getTextOfDate(sdf), 55, 20);
+    textAlign(CENTER);
+    text(getTextOfDate(sdf), width/2, translateY);
   }
 
   String getTextOfMonth(int monthIndex) {
@@ -282,11 +300,13 @@ class CalendarTimelapse {
 
   void drawCalendar() {
     timelapse();
+    if (isDateText) drawDate(); 
 
+    drawPausePlay();
     pushMatrix();
     translate(translateX, translateY);
-    if (isDateText) drawDate(); 
-    else {
+    if (!isDateText)
+    {
       drawMonth();
       nextButton.drawButton();
       prevButton.drawButton();
@@ -313,7 +333,7 @@ class CalendarTimelapse {
   void handleDateChange(int dayIndex, int monthIndex) {
     calendar.set(2019, monthIndex, dayIndex);
     calendarForBrowsing.set(2019, monthIndex, dayIndex);
-    
+
     isBrowse = false;
     timelapseIncrement = 1;
 

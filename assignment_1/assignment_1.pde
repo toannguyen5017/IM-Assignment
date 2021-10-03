@@ -105,13 +105,13 @@ void setup() {
   tempRow = temperature.getRow(0);
   //initalisng values dependant on the screen size
 
-// setup for ambient sound
+  // setup for ambient sound
   ac = AudioContext.getDefaultContext();
   sound();
-  
+
   // setup for mute button
   cp5 = new ControlP5(this);
-  
+
   cp5.addToggle("muteToggle")
     .setPosition(50, 50)
     .setSize(80, 50)
@@ -121,9 +121,8 @@ void setup() {
     .setColorActive(color(#FC3B3B))
     .setCaptionLabel("Mute")
     .setColorCaptionLabel(0)
-    
-  ;
 
+    ;
 }
 
 
@@ -233,6 +232,10 @@ void draw() {
 //}
 
 void mouseClicked() {
+  if(mouseX >= width - width/16.5 && mouseX <= width - width/20 + 15 && mouseY >= 50 && mouseY <= 50 + 30) {
+    calendar.isPaused = !calendar.isPaused;
+  }
+
   if (calendar.isDateText == true && mouseX >= calendar.translateX + 55 && mouseX <= calendar.translateX + 230
     && mouseY <= 70) calendar.toggleDate();
 
