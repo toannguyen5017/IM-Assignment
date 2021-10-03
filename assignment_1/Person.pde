@@ -6,6 +6,7 @@ class Person {
   PVector position;
 
   float radius, m;
+  
 
   Person(float x, float y, float r_) {
     position = new PVector(x, y);
@@ -61,17 +62,18 @@ class Person {
   }
 
   void display() {
-    noStroke();
+    stroke(255);
+    strokeWeight(1);
     fill(100);
     ellipse(position.x, position.y, radius*2, radius*2);
   }
 
   void move() { //move people circles towards center
-    if (abs(500 - position.x) > 0.1) {
-      position.x = position.x + (500 - position.x) * easing;
+    if (abs(width/2 - position.x) > 0.1) {
+      position.x = position.x + (width/2 - position.x) * easing;
     }
-    if (abs(500 - position.y) > 0.1) {
-      position.y = position.y + (500- position.y) * easing;
+    if (abs(height/2 - position.y) > 0.1) {
+      position.y = position.y + (height/2- position.y) * easing;
     }
   }
 

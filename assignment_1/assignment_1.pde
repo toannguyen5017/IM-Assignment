@@ -32,8 +32,9 @@ Table peopleCount;
 PImage icon;
 float easing = 0.05;
 int savedTime;
-int totalTime = 5000;
-
+//int totalTime = 5000;
+int personCount;
+int circles = 0;
 
 //temperature graph parameters
 float[] amount;
@@ -68,7 +69,6 @@ void setup() {
   //Circle branch 
   imageMode(CENTER);
   icon = loadImage("buildingicon.png");
-  savedTime = millis();
 
   //loading tables
   peopleCount = loadTable("peopleCount.csv");
@@ -97,6 +97,7 @@ void setup() {
 }
 
 
+
 void draw() {
   noStroke();
   background(0, 200, 0); 
@@ -122,36 +123,42 @@ void draw() {
    */
 
   noStroke();
-  
+
   //Amend the color background function
   // calendar.airTempAverage
   // calendar.peopleCountAverage
-  
-  Building building = new Building();
-  int personCounter = persons.size();
-  fill(0);
-  text(personCounter, 50, 50); 
-  textSize(50);
-  int passedTime = millis() - savedTime; //time passed
 
- /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
-    Person person = persons.get(i);
+  Building building = new Building();
+  //int personCounter = persons.size();
+  fill(0);
+  text(calendar.peopleCountAverage, 100, 50); 
+  textSize(50);
+
+  personCount = calendar.peopleCountAverage;
+  while (circles<personCount) {
+    persons.add(new Person(random(width), random(height), 15));
+    circles++;
+  }
+
+  for (int p=persons.size()-1; p>=0; p--) {
+    Person person = persons.get(p);
     person.display();
     person.move();
-    if (passedTime < totalTime) {
-      person.checkCollision(building); //bounce person off building, move to center after 5 seconds
+    if (!calendar.isntTimelapse) {
+      person.checkCollision(building);
+    } else { //remove people
+      calendar.isAnimating = true;
+      persons.clear();           
+      calendar.isAnimating = false;
+      circles = 0;
+      break;
     }
-    if (passedTime > 6000) { //remove people
-      persons.remove(person);
-    }
-    if (passedTime > 8000) { //reset timer
-      savedTime = millis();
-    }
-  } */
+  }
+
 
   fill(255);
-  circle (500, 500, 300);
-  image(icon, 500, 500, 200, 200);
+  circle (width/2, height/2, 300);
+  image(icon, width/2, height/2, 200, 200);
 
   noFill();
   drawTempGraph(amount, minamount, maxamount);
@@ -192,6 +199,10 @@ void draw() {
  }
  */
 //}
+
+
+
+
 
 void mouseClicked() {
   if (calendar.isDateText == true && mouseX >= calendar.translateX + 55 && mouseX <= calendar.translateX + 230

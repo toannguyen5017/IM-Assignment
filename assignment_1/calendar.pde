@@ -8,6 +8,8 @@ class CalendarTimelapse {
   int peopleCountAverage;
   float airTempAverage;
 
+
+
   Table peopleCounter = loadTable("peopleCountIn.csv");
   Table airTemp = loadTable("airTemp.csv");
 
@@ -32,6 +34,9 @@ class CalendarTimelapse {
   int timelapseModulo = 250;
   int timelapseIncrement = 1;
 
+  boolean isntTimelapse;
+
+
   LinkedList<Day> dayObjects = new LinkedList<Day>();
 
 
@@ -54,13 +59,20 @@ class CalendarTimelapse {
     monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
 
     updatePeopleCounter();
-    
+
     updateAirTemp();
   }
-
+  boolean isAnimating = false;
+  boolean endTimelapse = false;
   void timelapse() {
     if ((timelapseIncrement % timelapseModulo) == 0) {
-      if (calendar.get(Calendar.DAY_OF_YEAR) != 365) {
+      isntTimelapse = true;
+    } else {
+      isntTimelapse = false;
+    }
+    if (isntTimelapse) {
+      System.out.println(endTimelapse);
+      if (calendar.get(Calendar.DAY_OF_YEAR) != 365 && !isAnimating) {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendarForBrowsing.add(Calendar.DAY_OF_MONTH, 1);
         updatePeopleCounter();
@@ -69,7 +81,9 @@ class CalendarTimelapse {
         timelapseIncrement = 1;
       }
     } else {
-      timelapseIncrement++;
+      if (!isAnimating) {
+        timelapseIncrement++;
+      }
     }
   }
 
@@ -91,6 +105,10 @@ class CalendarTimelapse {
 
 
     //System.out.println("People count: " + getTextOfDate(sdf) + " " + sum + " " + numberOfRows + " " + average);
+  }
+
+  int getPeopleCount() {
+    return peopleCountAverage;
   }
 
   void updateAirTemp() {
@@ -313,7 +331,7 @@ class CalendarTimelapse {
   void handleDateChange(int dayIndex, int monthIndex) {
     calendar.set(2019, monthIndex, dayIndex);
     calendarForBrowsing.set(2019, monthIndex, dayIndex);
-    
+
     isBrowse = false;
     timelapseIncrement = 1;
 
