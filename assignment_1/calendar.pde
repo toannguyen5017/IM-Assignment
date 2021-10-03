@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 
 class CalendarTimelapse {
+  boolean isPaused = false;
+
   int peopleCountAverage;
   float airTempAverage;
 
@@ -69,7 +71,22 @@ class CalendarTimelapse {
         timelapseIncrement = 1;
       }
     } else {
-      timelapseIncrement++;
+      if (!isPaused) timelapseIncrement++;
+    }
+  }
+
+  void drawPausePlay() {
+    fill(0);
+    if (!isPaused) {
+      rect(width - width/16.5, 50, 15, 30);
+      rect(width - width/20, 50, 15, 30);
+    }
+    else {
+     beginShape();
+     vertex(width - width/16.5, 50);
+     vertex(width - width/20 + 15, 65);
+     vertex(width - width/16.5, 80);
+     endShape(CLOSE);
     }
   }
 
@@ -283,8 +300,9 @@ class CalendarTimelapse {
 
   void drawCalendar() {
     timelapse();
-    if(isDateText) drawDate(); 
-    
+    if (isDateText) drawDate(); 
+
+    drawPausePlay();
     pushMatrix();
     translate(translateX, translateY);
     if (!isDateText)

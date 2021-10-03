@@ -106,13 +106,13 @@ void setup() {
   tempRow = temperature.getRow(0);
   //initalisng values dependant on the screen size
 
-// setup for ambient sound
+  // setup for ambient sound
   ac = AudioContext.getDefaultContext();
   sound();
-  
+
   // setup for mute button
   cp5 = new ControlP5(this);
-  
+
   cp5.addToggle("muteToggle")
     .setPosition(50, 50)
     .setSize(80, 50)
@@ -122,9 +122,8 @@ void setup() {
     .setColorActive(color(#FC3B3B))
     .setCaptionLabel("Mute")
     .setColorCaptionLabel(0)
-    
-  ;
 
+    ;
 }
 
 
@@ -152,20 +151,19 @@ void draw() {
    
    */
 
-   // set gain based off of number of people, or 0 if mute button is activated
-  if(muteToggle == true){
+  // set gain based off of number of people, or 0 if mute button is activated
+  if (muteToggle == true) {
     g.setGain(0);
-  }
-  else {
-  g  .setGain(calendar.peopleCountAverage/10);
+  } else {
+    g  .setGain(calendar.peopleCountAverage/10);
   }
 
   noStroke();
-  
+
   //Amend the color background function
   // calendar.airTempAverage
   // calendar.peopleCountAverage
-  
+
   Building building = new Building();
   int personCounter = persons.size();
   fill(0);
@@ -173,20 +171,20 @@ void draw() {
   textSize(50);
   int passedTime = millis() - savedTime; //time passed
 
- /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
-    Person person = persons.get(i);
-    person.display();
-    person.move();
-    if (passedTime < totalTime) {
-      person.checkCollision(building); //bounce person off building, move to center after 5 seconds
-    }
-    if (passedTime > 6000) { //remove people
-      persons.remove(person);
-    }
-    if (passedTime > 8000) { //reset timer
-      savedTime = millis();
-    }
-  } */
+  /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
+   Person person = persons.get(i);
+   person.display();
+   person.move();
+   if (passedTime < totalTime) {
+   person.checkCollision(building); //bounce person off building, move to center after 5 seconds
+   }
+   if (passedTime > 6000) { //remove people
+   persons.remove(person);
+   }
+   if (passedTime > 8000) { //reset timer
+   savedTime = millis();
+   }
+   } */
 
   fill(255);
   circle (500, 500, 300);
@@ -233,6 +231,10 @@ void draw() {
 //}
 
 void mouseClicked() {
+  if(mouseX >= width - width/16.5 && mouseX <= width - width/20 + 15 && mouseY >= 50 && mouseY <= 50 + 30) {
+    calendar.isPaused = !calendar.isPaused;
+  }
+
   if (calendar.isDateText == true && mouseX >= calendar.translateX + 55 && mouseX <= calendar.translateX + 230
     && mouseY <= 70) calendar.toggleDate();
 
