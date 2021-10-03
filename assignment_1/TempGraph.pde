@@ -97,11 +97,6 @@ void drawLines() {
   }
   strokeWeight(3);
   line(x1, Y1, x1, Y2);
-  //String currentAirTemp = String.valueOf(round(calendar.airTempAverage)) + "°C";
-  //String currentPeopleAverage = String.valueOf(calendar.peopleCountAverage);
-  //textSize(10);
-  //textAlign(CENTER, TOP);
-  //text(currentAirTemp, x1, Y2+5);
   line(x2, PY1, x2, PY2);
   //text(currentPeopleAverage, x2, PY2+5);
 }
