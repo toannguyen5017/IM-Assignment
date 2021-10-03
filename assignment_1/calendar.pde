@@ -1,4 +1,4 @@
-import java.util.Calendar; //<>//
+import java.util.Calendar; //<>// //<>//
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -78,8 +78,8 @@ class CalendarTimelapse {
   void drawPausePlay() {
     fill(0);
     if (!isPaused) {
-      rect(width - width/16.5, 50, 15, 30);
-      rect(width - width/20, 50, 15, 30);
+      rect(width - width/16.5, 50, 10, 30);
+      rect(width - width/20, 50, 10, 30);
     }
     else {
      beginShape();
