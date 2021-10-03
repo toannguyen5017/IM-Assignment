@@ -54,7 +54,7 @@ class CalendarTimelapse {
     monthIndexForBrowsing = calendarForBrowsing.get(Calendar.MONTH);
 
     updatePeopleCounter();
-    
+
     updateAirTemp();
   }
 
@@ -139,7 +139,8 @@ class CalendarTimelapse {
 
   void drawDate() {
     textSize(30);
-    text(getTextOfDate(sdf), 55, 20);
+    textAlign(CENTER);
+    text(getTextOfDate(sdf), width/2, translateY);
   }
 
   String getTextOfMonth(int monthIndex) {
@@ -282,11 +283,12 @@ class CalendarTimelapse {
 
   void drawCalendar() {
     timelapse();
-
+    if(isDateText) drawDate(); 
+    
     pushMatrix();
     translate(translateX, translateY);
-    if (isDateText) drawDate(); 
-    else {
+    if (!isDateText)
+    {
       drawMonth();
       nextButton.drawButton();
       prevButton.drawButton();
@@ -313,7 +315,7 @@ class CalendarTimelapse {
   void handleDateChange(int dayIndex, int monthIndex) {
     calendar.set(2019, monthIndex, dayIndex);
     calendarForBrowsing.set(2019, monthIndex, dayIndex);
-    
+
     isBrowse = false;
     timelapseIncrement = 1;
 
