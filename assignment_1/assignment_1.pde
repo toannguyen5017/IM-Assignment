@@ -3,7 +3,7 @@ import beads.*;
 
 // global values for ambient sound
 AudioContext ac;
-Gain g;
+Gain gain;
 
 // global values for mute button
 ControlP5 cp5;
@@ -129,8 +129,8 @@ void setup() {
 
 void draw() {
   noStroke();
-  background(0, 200, 0); 
-
+  
+  backgroundColour();
   /*
   fill(1);
    circle(500, 500, 100);
@@ -153,10 +153,10 @@ void draw() {
 
    // set gain based off of number of people, or 0 if mute button is activated
   if(muteToggle == true){
-    g.setGain(0);
+    gain.setGain(0);
   }
   else {
-  g  .setGain(calendar.peopleCountAverage/10);
+  gain.setGain(calendar.peopleCountAverage/10);
   }
 
   noStroke();

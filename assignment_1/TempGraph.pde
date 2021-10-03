@@ -1,6 +1,7 @@
 float x1; 
 float x2;
 float pATA; 
+float y1;
 
 void setUpTempGraph() { 
   X1 = width/2 + width * 1/20; 
@@ -8,6 +9,7 @@ void setUpTempGraph() {
   X2 = width - width * 2/20;
   Y2 = height - height * 2/20;
   x1 = X1;
+  y1 = Y1;
 
 
   amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days

@@ -9,9 +9,9 @@ void sound() {
   
   player.setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS);
   
-  g = new Gain(2, 1.0);
+  gain = new Gain(2, 1.0);
   
-  g.addInput(player);
-  ac.out.addInput(g);
+  gain.addInput(player);
+  ac.out.addInput(gain);
   ac.start(); 
 }

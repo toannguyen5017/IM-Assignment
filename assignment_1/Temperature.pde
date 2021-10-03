@@ -52,7 +52,7 @@ void backgroundColour() {
   
 
   textSize(30);
-  text("Average Temp of the Day: "+ round(calendar.airTempAverage) + "°C" , width/3, height/3);
+  text("Average Temp of the Day: "+ round(calendar.airTempAverage) + "°C" , x1, y1 - 20);
   
   
 }
