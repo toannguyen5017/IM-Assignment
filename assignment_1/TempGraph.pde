@@ -66,7 +66,6 @@ void drawTempGraph(float yMin, float yMax) {
 
 
   for (TableRow row : accurateAirTemp.rows()) { //have to minus 4 as or else there is a 0.0 at the end
-    System.out.println("yes");
 
     float x = map(i++, 0, accurateAirTemp.getRowCount(), X1, X2);
 
@@ -122,7 +121,7 @@ void drawTempXLabels() {
 
   textAlign(CENTER, TOP);
 
-  text("months", width/2 - width * 4.5/20, Y2 + 40);
+  text("Months", width/2 + width * 4.5/20, Y2 + 40);
 }
 
 void drawTempYLabels() {
@@ -145,9 +144,6 @@ void drawLines() {
   float dayIndex = calendar.dayIndexForLine - 195;
   float xPosPeople = map(dayIndex, 0, 171, PX1, PX2);
   float xPosAirTemp = map(dayIndex, 0, 171, X1, X2);
-  line(X1, height - 10, X2, height - 10);
-  line(PX1, height -10, PX2, height - 10);
-
 
   strokeWeight(3);
   line(xPosPeople, Y1, xPosPeople, Y2);

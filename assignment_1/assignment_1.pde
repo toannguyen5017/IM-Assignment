@@ -43,8 +43,9 @@ Table peopleCount;
 PImage icon;
 float easing = 0.05;
 int savedTime;
-int totalTime = 5000;
-
+//int totalTime = 5000;
+int personCount;
+int circles = 0;
 
 //temperature graph parameters
 float[] amount;
@@ -78,7 +79,6 @@ void setup() {
   //Circle branch 
   imageMode(CENTER);
   icon = loadImage("buildingicon.png");
-  savedTime = millis();
 
   //loading tables
   peopleCount = loadTable("peopleCount.csv");
@@ -125,30 +125,18 @@ void setup() {
     ;
 }
 
+Building building;
 
 void draw() {
   noStroke();
   
   backgroundColour();
-  /*
-  fill(1);
-   circle(500, 500, 100);
-   updateArray();
-   
-   for (Person person : persons) {
-   person.move(); 
-   person.display();
-   }
-   
-   
-   for (int i = 0; i < persons.size(); i++) { //goes through each person and checks if they are passed 500, if so removes it. seperate from other for loop as it need i to find the position in the array
-   Person checkPerson = persons.get(i);
-   if (checkPerson.finished()) {
-   persons.remove(i);
-   }
-   }
-   
-   */
+
+  building = new Building();
+  //int personCounter = persons.size();
+
+  drawCircles(building);
+
 
    // set gain based off of number of people, or 0 if mute button is activated
   if(muteToggle == true){
@@ -164,27 +152,6 @@ void draw() {
   // calendar.airTempAverage
   // calendar.peopleCountAverage
 
-  Building building = new Building();
-  int personCounter = persons.size();
-  fill(0);
-  text(personCounter, 50, 50); 
-  textSize(50);
-  int passedTime = millis() - savedTime; //time passed
-
-  /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
-   Person person = persons.get(i);
-   person.display();
-   person.move();
-   if (passedTime < totalTime) {
-   person.checkCollision(building); //bounce person off building, move to center after 5 seconds
-   }
-   if (passedTime > 6000) { //remove people
-   persons.remove(person);
-   }
-   if (passedTime > 8000) { //reset timer
-   savedTime = millis();
-   }
-   } */
 
   fill(255);
   circle (width/2, height/2, 300);
@@ -199,37 +166,49 @@ void draw() {
   drawPeopleGraph(pMinAmount, pMaxAmount);
   drawPeopleXLabels();
   drawPeopleYLabels();
-  //drawLines();
+  
   rectMode(CORNER);
   fill(0);
   calendar.drawCalendar();
   fill(255);
   rectMode(CENTER);
+    
+  textSize(18);
+  textAlign(CENTER);
+  text("Average Temp of the Day: "+ round(calendar.airTempAverage) + "°C", width/2 + width/4.5, height/2 + height/5);
+  textAlign(CORNER);
+  text("Average No. People Entering B11 a Day Per 30 minutes: "+ calendar.peopleCountAverage, width/2 - width/2.5, height/2 + height/5);
 }
 
-//void updateArray() { // checks if all persons in the array are gone. need to and time for when the count is 0 
-/*if (persons.size() == 0) { //once all gone increases count and startX.
- String[] splitDate = split(row.getString(0), '/');
- //println(splitDate[0], " ", lastDate[0]);
- if (int(splitDate[0]) == int(lastDate[0])) {
- count = count + row.getInt(1);
- index++; //increases index to the next row
- row = peopleCount.getRow(index);
- } else {  
- //println(row.getString(0), " ", count); //debugging to see if the count is working
- lastDate = split(row.getString(0), '/');
- startX = -50; //startX has to be updated as else it continues to get further and further back.
- for (int i = 0; i < count; i++) { //creates new persons according to the new count.
- persons.add(new Person(startX, startY, speed, personSize)); 
- startX = startX - 50;
- }
- count = row.getInt(1);
- index++;
- row = peopleCount.getRow(index);
- }
- }
- */
-//}
+
+void drawCircles(Building building) {
+  personCount = calendar.peopleCountAverage;
+  
+  if(personCount != 0) {
+  while (circles<personCount) {
+    persons.add(new Person(random(width), random(height), 15));
+    
+    circles++;
+  }
+  
+  
+  for (int p=persons.size()-1; p>=0; p--) {
+    Person person = persons.get(p);
+    person.display();
+    person.move();
+    if (!calendar.isntTimelapse) {
+      person.checkCollision(building);
+    } else { //remove people
+      calendar.isAnimating = true;
+      persons.clear();           
+      calendar.isAnimating = false;
+      circles = 0;
+      break;
+    }
+  }
+  }
+}
+
 
 void mouseClicked() {
   if(mouseX >= width - width/16.5 && mouseX <= width - width/20 + 15 && mouseY >= 50 && mouseY <= 50 + 30) {
@@ -245,6 +224,9 @@ void mouseClicked() {
       if (mouseX >= day.getDetranslatedX() && mouseX <= day.getDetranslatedX() + day.getWidth()
         && mouseY >= day.getDetranslatedY() && mouseY <= day.getDetranslatedY() + day.getHeight()) {
         day.handleClick();
+        persons.clear();
+        circles = 0;
+        drawCircles(building);
         break;
       }
     }

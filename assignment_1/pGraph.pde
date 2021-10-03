@@ -118,7 +118,6 @@ void setUpPersonGraph() {
     
     
     for (TableRow row : accuratePeopleCount.rows()) { //have to minus 4 as or else there is a 0.0 at the end
-      System.out.println("yes");
       
       float x = map(i++, 0, accuratePeopleCount.getRowCount(), PX1, PX2);
 
@@ -173,7 +172,7 @@ void setUpPersonGraph() {
 
     textAlign(CENTER, TOP);
 
-    text("months", width/2 - width * 4.5/20, PY2 + 40);
+    text("Months", width/2 - width * 4.5/20, PY2 + 40);
   }
 
 

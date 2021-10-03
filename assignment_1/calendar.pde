@@ -1,4 +1,4 @@
-import java.util.Calendar; //<>// //<>//
+import java.util.Calendar; //<>// //<>// //<>//
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -36,6 +36,9 @@ class CalendarTimelapse {
   int timelapseModulo = 250;
   int timelapseIncrement = 1;
 
+  boolean isntTimelapse;
+
+
   LinkedList<Day> dayObjects = new LinkedList<Day>();
 
 
@@ -63,10 +66,17 @@ class CalendarTimelapse {
 
     dayIndexForLine = calendar.get(Calendar.DAY_OF_YEAR);
   }
-
+  boolean isAnimating = false;
+  boolean endTimelapse = false;
   void timelapse() {
     if ((timelapseIncrement % timelapseModulo) == 0) {
-      if (calendar.get(Calendar.DAY_OF_YEAR) != 365) {
+      isntTimelapse = true;
+    } else {
+      isntTimelapse = false;
+    }
+    if (isntTimelapse) {
+      System.out.println(endTimelapse);
+      if (calendar.get(Calendar.DAY_OF_YEAR) != 365 && !isAnimating) {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendarForBrowsing.add(Calendar.DAY_OF_MONTH, 1);
         updatePeopleCounter();
@@ -111,6 +121,10 @@ class CalendarTimelapse {
 
 
     //System.out.println("People count: " + getTextOfDate(sdf) + " " + sum + " " + numberOfRows + " " + average);
+  }
+
+  int getPeopleCount() {
+    return peopleCountAverage;
   }
 
   void updateAirTemp() {
