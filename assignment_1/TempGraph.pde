@@ -1,8 +1,14 @@
+float x1; 
+float x2;
+float pATA; 
+
 void setUpTempGraph() { 
-  X1 = width/2 + 100; 
-  Y1 = height/2 + 300;
-  X2 = width/2 + 800; 
-  Y2 = height/2 + 450;
+  X1 = width/2 + width * 1/20; 
+  Y1 = height/2 + height * 5/20; 
+  X2 = width - width * 2/20;
+  Y2 = height - height * 2/20;
+  x1 = X1;
+
 
   amount = new float[167]; // how many days there are betweem july 14th and january 1st. Has to be hard coded as the amount of rows in each day is different between days
 
@@ -29,6 +35,8 @@ void setUpTempGraph() {
 
   minamount = min(amount);
   maxamount = max(amount);
+
+  pATA = calendar.airTempAverage;
 }
 
 void drawTempGraph(float[] data, float yMin, float yMax) {
@@ -41,6 +49,13 @@ void drawTempGraph(float[] data, float yMin, float yMax) {
     vertex(x, y);
   }
   endShape();
+  fill(255);
+  textSize(18);
+  textAlign(LEFT);
+  text("Average Air Temperature (July - December 2019)", X1, Y1 - 10);
+  textSize(10);
+  textAlign(RIGHT, BOTTOM);
+  text("Source: FEIT EIF Researcher Interface (eif-research.feit.uts.edu.au) ", width-10, height-10);
 }
 
 void drawTempXLabels() {
@@ -57,7 +72,7 @@ void drawTempXLabels() {
   }
   textSize(18);
   textAlign(CENTER, TOP);
-  text("months", width/2 + 450, Y2+40);
+  text("months", width/2 + width * 4.5/20, Y2+40);
 }
 
 void drawTempYLabels() {
@@ -71,5 +86,17 @@ void drawTempYLabels() {
     line(X1, y, X1 -5, y);
   }
   textSize(18);
-  text("°C", X1-50, height/2 + 375);
+  text("°C", X1-30, height - height * 3.25/20);
+}
+
+void drawLines() {
+  if (calendar.airTempAverage != pATA) {
+    x1 = x1 + (X2 - X1) / 167; 
+    x2 = x2 + (PX2 - PX1) / 167;
+    pATA = calendar.airTempAverage;
+  }
+  strokeWeight(3);
+  line(x1, Y1, x1, Y2);
+  line(x2, PY1, x2, PY2);
+  //text(currentPeopleAverage, x2, PY2+5);
 }

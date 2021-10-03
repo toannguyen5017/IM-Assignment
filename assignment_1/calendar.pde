@@ -8,7 +8,7 @@ class CalendarTimelapse {
   int peopleCountAverage;
   float airTempAverage;
 
-  Table peopleCounter = loadTable("peopleCountIn.csv");
+  Table peopleCounter = loadTable("peopleCount.csv");
   Table airTemp = loadTable("airTemp.csv");
 
   Table peopleTimelapse = new Table();

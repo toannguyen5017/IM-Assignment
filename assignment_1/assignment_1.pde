@@ -75,7 +75,6 @@ void setup() {
 
   calendar = new CalendarTimelapse();
 
-
   //Circle branch 
   imageMode(CENTER);
   icon = loadImage("buildingicon.png");
@@ -161,11 +160,11 @@ void draw() {
   }
 
   noStroke();
-  
+
   //Amend the color background function
   // calendar.airTempAverage
   // calendar.peopleCountAverage
-  
+
   Building building = new Building();
   int personCounter = persons.size();
   fill(0);
@@ -173,20 +172,20 @@ void draw() {
   textSize(50);
   int passedTime = millis() - savedTime; //time passed
 
- /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
-    Person person = persons.get(i);
-    person.display();
-    person.move();
-    if (passedTime < totalTime) {
-      person.checkCollision(building); //bounce person off building, move to center after 5 seconds
-    }
-    if (passedTime > 6000) { //remove people
-      persons.remove(person);
-    }
-    if (passedTime > 8000) { //reset timer
-      savedTime = millis();
-    }
-  } */
+  /* for (int i=0; i>= calendar.peopleCountAverage; --i) {      
+   Person person = persons.get(i);
+   person.display();
+   person.move();
+   if (passedTime < totalTime) {
+   person.checkCollision(building); //bounce person off building, move to center after 5 seconds
+   }
+   if (passedTime > 6000) { //remove people
+   persons.remove(person);
+   }
+   if (passedTime > 8000) { //reset timer
+   savedTime = millis();
+   }
+   } */
 
   fill(255);
   circle (500, 500, 300);
@@ -196,11 +195,12 @@ void draw() {
   drawTempGraph(amount, minamount, maxamount);
   drawTempXLabels();
   drawTempYLabels();
+
   noFill();
   drawPeopleGraph(pAmount, pMinAmount, pMaxAmount);
   drawPeopleXLabels();
   drawPeopleYLabels();
-
+  drawLines();
   rectMode(CORNER);
   fill(0);
   calendar.drawCalendar();
